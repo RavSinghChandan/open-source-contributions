@@ -12,15 +12,18 @@
 |-----|------|------|------|---------|--------|
 | 1 | 2026-06-29 | [von-development/awesome-LangGraph](https://github.com/von-development/awesome-LangGraph) | Add 2 community projects | [PR #76](https://github.com/vonzosten/awesome-LangGraph/pull/76) | ⏳ Open |
 | 2 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Bug fix + unit tests (core) | [PR #38538](https://github.com/langchain-ai/langchain/pull/38538) | ⏳ Open |
-| 3 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring fix (qdrant) | [PR #38539](https://github.com/langchain-ai/langchain/pull/38539) | ⏳ Open |
+| 3 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring fix — missing await (qdrant) | [PR #38539](https://github.com/langchain-ai/langchain/pull/38539) | ⏳ Open |
+| 4 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring fix — missing await (core + chroma) | [PR #38541](https://github.com/langchain-ai/langchain/pull/38541) | ⏳ Open |
+| 5 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring — clarify JSON schema `title` requirement | [PR #38542](https://github.com/langchain-ai/langchain/pull/38542) | ⏳ Open |
+| 6 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Bug fix — `InMemoryCache` eviction + `Language.PERL` | [PR #38543](https://github.com/langchain-ai/langchain/pull/38543) | ⏳ Open |
 
 ---
 
 ## Stats
 
-- **Total PRs opened:** 3
+- **Total PRs opened:** 6
 - **Total PRs merged:** 0 (check back in 24–72h)
-- **Streak:** Day 1 (3 PRs on launch day)
+- **Streak:** Day 1 (6 PRs on launch day — all in LangChain 140K⭐)
 - **Target repos:** awesome-LangGraph, LangChain, LangGraph, Hugging Face, RAGAS
 
 ---
