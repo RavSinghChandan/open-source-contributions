@@ -10,13 +10,13 @@
 
 | Day | Date | Repo | Type | PR Link | Status |
 |-----|------|------|------|---------|--------|
-| 1 | 2026-06-29 | [von-development/awesome-LangGraph](https://github.com/von-development/awesome-LangGraph) | Add 2 community projects | [PR #76](https://github.com/vonzosten/awesome-LangGraph/pull/76) | ⏳ Open |
-| 2 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Bug fix + unit tests (core) | [PR #38538](https://github.com/langchain-ai/langchain/pull/38538) | ❌ Closed (bot: need assignment) |
-| 3 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring fix — missing await (qdrant) | [PR #38539](https://github.com/langchain-ai/langchain/pull/38539) | ❌ Closed (bot: need assignment) |
-| 4 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring fix — missing await (core + chroma) | [PR #38541](https://github.com/langchain-ai/langchain/pull/38541) | ❌ Closed (bot: need assignment) |
-| 5 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring — clarify JSON schema `title` requirement | [PR #38542](https://github.com/langchain-ai/langchain/pull/38542) | ❌ Closed (bot: need assignment) |
-| 6 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Bug fix — `InMemoryCache` eviction + `Language.PERL` | [PR #38543](https://github.com/langchain-ai/langchain/pull/38543) | ❌ Closed (bot: need assignment) |
-| 7 | 2026-06-30 | [vibrantlabsai/ragas](https://github.com/vibrantlabsai/ragas) | Bug fix — `NonLLMContextRecall` threshold `>` → `>=` + unit tests | [PR #2798](https://github.com/vibrantlabsai/ragas/pull/2798) | ⏳ Open |
+| 1 | 2026-06-29 | [vonzosten/awesome-LangGraph](https://github.com/vonzosten/awesome-LangGraph) | Add 2 community projects | [PR #76](https://github.com/vonzosten/awesome-LangGraph/pull/76) | ⏳ Open |
+| 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Bug fix + unit tests — `Visitor._validate_func` error message | [PR #38538](https://github.com/langchain-ai/langchain/pull/38538) | ❌ Closed (bot: need assignment) |
+| 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring fix — missing `await` in qdrant example | [PR #38539](https://github.com/langchain-ai/langchain/pull/38539) | ❌ Closed (bot: need assignment) |
+| 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring fix — missing `await` in core + chroma examples | [PR #38541](https://github.com/langchain-ai/langchain/pull/38541) | ❌ Closed (bot: need assignment) |
+| 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring — clarify JSON schema `title` requirement | [PR #38542](https://github.com/langchain-ai/langchain/pull/38542) | ❌ Closed (bot: need assignment) |
+| 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Bug fix — `InMemoryCache` eviction + `Language.PERL` separators | [PR #38543](https://github.com/langchain-ai/langchain/pull/38543) | ❌ Closed (bot: need assignment) |
+| 2 | 2026-06-30 | [vibrantlabsai/ragas](https://github.com/vibrantlabsai/ragas) | Bug fix — `NonLLMContextRecall` threshold `>` → `>=` + unit tests | [PR #2798](https://github.com/vibrantlabsai/ragas/pull/2798) | ⏳ Open |
 
 ---
 
@@ -35,12 +35,12 @@
 
 ## Stats
 
-- **Total PRs opened:** 7
+- **Total PRs opened:** 7 (6 on Day 1, 1 on Day 2)
 - **Total PRs merged:** 0 (check back in 24–72h)
-- **PRs closed by bot:** 5 (LangChain/LangGraph require issue assignment before PR — lesson learned)
+- **PRs closed by bot:** 5 (LangChain requires issue assignment before PR — lesson learned on Day 1)
 - **Active open PRs:** 2 (awesome-LangGraph #76, RAGAS #2798)
-- **LangGraph issues awaiting assignment:** 4 (ready to become PRs immediately once assigned)
-- **Streak:** Day 2
+- **LangGraph issues awaiting assignment:** 4 (ready to become PRs the moment assigned)
+- **Current day:** Day 2
 - **Target repos:** awesome-LangGraph ✅, LangChain (need assignment), RAGAS ✅, LangGraph (need assignment)
 
 ---
@@ -52,13 +52,13 @@ open-source-contributions/
 ├── README.md              ← This file — scoreboard + overview
 ├── logs/                  ← One file per contribution with full Q&A
 │   └── 2026-06/
-│       ├── day-01-awesome-langgraph.md
-│       ├── day-02-langchain-typo.md
-│       ├── day-03-langchain-qdrant-await-fix.md
-│       ├── day-04-langchain-core-chroma-await-fix.md
-│       ├── day-05-langchain-json-schema-title-docstring.md
-│       ├── day-06-langchain-inmemorycache-perl-fix.md
-│       └── day-07-ragas-nonllm-context-recall-threshold.md
+│       ├── day-01-awesome-langgraph.md           ← PR #76
+│       ├── day-01-langchain-typo.md              ← PR #38538
+│       ├── day-01-langchain-qdrant-await-fix.md  ← PR #38539
+│       ├── day-01-langchain-core-chroma-await.md ← PR #38541
+│       ├── day-01-langchain-json-schema-title.md ← PR #38542
+│       ├── day-01-langchain-inmemorycache-perl.md ← PR #38543
+│       └── day-02-ragas-nonllm-threshold.md      ← PR #2798
 └── targets/
     ├── TARGET-REPOS.md    ← Pre-researched repos ready for contribution
     └── 30-DAY-PLAN.md     ← Full 30-day calendar with daily targets
