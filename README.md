@@ -1,5 +1,7 @@
 # Open Source Contributions — Chandan Kumar (RavSinghChandan)
 
+> ⚠️ **READ FIRST EVERY SESSION → [CONTRIBUTION-RULES.md](CONTRIBUTION-RULES.md)** — understand each repo's rules before opening any PR.
+
 > **Goal:** 1 open source contribution per day. 30 days. At least 5 merged PRs.
 > **Domain:** AI Engineering — LangChain, LangGraph, Hugging Face, and AI tooling ecosystem
 > **Why:** Build a public track record as a serious AI open source contributor
