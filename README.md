@@ -11,12 +11,25 @@
 | Day | Date | Repo | Type | PR Link | Status |
 |-----|------|------|------|---------|--------|
 | 1 | 2026-06-29 | [vonzosten/awesome-LangGraph](https://github.com/vonzosten/awesome-LangGraph) | Add 2 community projects | [PR #76](https://github.com/vonzosten/awesome-LangGraph/pull/76) | ⏳ Open |
-| 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Bug fix + unit tests — `Visitor._validate_func` error message | [PR #38538](https://github.com/langchain-ai/langchain/pull/38538) | ❌ Closed (bot: need assignment) |
-| 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring fix — missing `await` in qdrant example | [PR #38539](https://github.com/langchain-ai/langchain/pull/38539) | ❌ Closed (bot: need assignment) |
-| 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring fix — missing `await` in core + chroma examples | [PR #38541](https://github.com/langchain-ai/langchain/pull/38541) | ❌ Closed (bot: need assignment) |
-| 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring — clarify JSON schema `title` requirement | [PR #38542](https://github.com/langchain-ai/langchain/pull/38542) | ❌ Closed (bot: need assignment) |
-| 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Bug fix — `InMemoryCache` eviction + `Language.PERL` separators | [PR #38543](https://github.com/langchain-ai/langchain/pull/38543) | ❌ Closed (bot: need assignment) |
+| 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Bug fix + unit tests — `Visitor._validate_func` error message | [PR #38538](https://github.com/langchain-ai/langchain/pull/38538) | 🔄 Closed → commented on [issue #36701](https://github.com/langchain-ai/langchain/issues/36701) for assignment |
+| 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring fix — missing `await` in qdrant + core + chroma | [PR #38539](https://github.com/langchain-ai/langchain/pull/38539) | 🔄 Closed → commented on [issue #37058](https://github.com/langchain-ai/langchain/issues/37058) + [#38560](https://github.com/langchain-ai/langchain/issues/38560) for assignment |
+| 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring — clarify JSON schema `title` requirement | [PR #38542](https://github.com/langchain-ai/langchain/pull/38542) | 🔄 Closed → commented on [issue #34662](https://github.com/langchain-ai/langchain/issues/34662) for assignment |
+| 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Bug fix — `InMemoryCache` eviction + `Language.PERL` separators | [PR #38543](https://github.com/langchain-ai/langchain/pull/38543) | 🔄 Closed → commented on [issue #36750](https://github.com/langchain-ai/langchain/issues/36750) for assignment |
 | 2 | 2026-06-30 | [vibrantlabsai/ragas](https://github.com/vibrantlabsai/ragas) | Bug fix — `NonLLMContextRecall` threshold `>` → `>=` + unit tests | [PR #2798](https://github.com/vibrantlabsai/ragas/pull/2798) | ⏳ Open |
+
+---
+
+## LangChain — Issues Commented, Awaiting Assignment
+
+> PRs were closed by bot on Day 1 because we didn't follow the rule. Fixed now — commented on every issue requesting assignment. PRs will be reopened the moment we are assigned.
+
+| Issue | Fix | Merge chance | Status |
+|-------|-----|-------------|--------|
+| [#36701](https://github.com/langchain-ai/langchain/issues/36701) | Bug fix: `comparators` → `operators` in `Visitor._validate_func` error message + 4 unit tests | ~90% | ⏳ Awaiting assignment |
+| [#37058](https://github.com/langchain-ai/langchain/issues/37058) | Docstring: missing `await` in qdrant `asimilarity_search` example | ~95% | ⏳ Awaiting assignment |
+| [#38560](https://github.com/langchain-ai/langchain/issues/38560) | Docstring: missing `await` in InMemoryVectorStore + Chroma examples | ~95% | ⏳ Awaiting assignment |
+| [#34662](https://github.com/langchain-ai/langchain/issues/34662) | Docstring: clarify `title` is required key in JSON schema dicts | ~85% | ⏳ Awaiting assignment |
+| [#36750](https://github.com/langchain-ai/langchain/issues/36750) | Bug fix: `InMemoryCache` eviction guard + add `Language.PERL` separators | ~80% | ⏳ Awaiting assignment |
 
 ---
 
@@ -39,7 +52,8 @@
 - **Total PRs merged:** 0 (check back in 24–72h)
 - **PRs closed by bot:** 5 (LangChain requires issue assignment before PR — lesson learned on Day 1)
 - **Active open PRs:** 2 (awesome-LangGraph #76, RAGAS #2798)
-- **LangGraph issues awaiting assignment:** 4 (ready to become PRs the moment assigned)
+- **LangChain issues awaiting assignment:** 5 (fixes ready, PRs will open the moment assigned)
+- **LangGraph issues awaiting assignment:** 4 (fixes ready, PRs will open the moment assigned)
 - **Current day:** Day 2
 - **Target repos:** awesome-LangGraph ✅, LangChain (need assignment), RAGAS ✅, LangGraph (need assignment)
 
