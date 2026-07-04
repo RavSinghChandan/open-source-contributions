@@ -18,6 +18,34 @@
 | 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Docstring — clarify JSON schema `title` requirement | [PR #38542](https://github.com/langchain-ai/langchain/pull/38542) | 🔄 Closed → commented on [issue #34662](https://github.com/langchain-ai/langchain/issues/34662) for assignment |
 | 1 | 2026-06-29 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | Bug fix — `InMemoryCache` eviction + `Language.PERL` separators | [PR #38543](https://github.com/langchain-ai/langchain/pull/38543) | 🔄 Closed → commented on [issue #36750](https://github.com/langchain-ai/langchain/issues/36750) for assignment |
 | 2 | 2026-06-30 | [vibrantlabsai/ragas](https://github.com/vibrantlabsai/ragas) | Bug fix — `NonLLMContextRecall` threshold `>` → `>=` + unit tests | [PR #2798](https://github.com/vibrantlabsai/ragas/pull/2798) | ⏳ Open |
+| 3 | 2026-06-30 | [huggingface/smolagents](https://github.com/huggingface/smolagents) | Docs — add missing docstrings to 5 public utility functions in `utils.py` | [PR #2438](https://github.com/huggingface/smolagents/pull/2438) | ⏳ Open |
+| 4 | 2026-06-30 | [huggingface/evaluate](https://github.com/huggingface/evaluate) | Docs — add missing docstrings to 5 filename utility functions in `naming.py` | [PR #771](https://github.com/huggingface/evaluate/pull/771) | ⏳ Open |
+| 5 | 2026-06-30 | [huggingface/accelerate](https://github.com/huggingface/accelerate) | Docs — add missing docstrings to 3 predicate utility functions in `operations.py` | [PR #4095](https://github.com/huggingface/accelerate/pull/4095) | ⏳ Open |
+| 6 | 2026-06-30 | [huggingface/datasets](https://github.com/huggingface/datasets) | Docs — add missing docstrings to 5 public utility functions in `py_utils.py` | [PR #8294](https://github.com/huggingface/datasets/pull/8294) | ⏳ Open |
+| 7 | 2026-06-30 | [huggingface/optimum](https://github.com/huggingface/optimum) | Docs — add missing docstrings to 5 utility functions in `testing_utils.py` + `save_utils.py` | [PR #2454](https://github.com/huggingface/optimum/pull/2454) | ⏳ Open |
+| 8 | 2026-06-30 | [UKPLab/sentence-transformers](https://github.com/UKPLab/sentence-transformers) | Docs — add missing docstrings to `Dense` methods + `to_scipy_coo` | [PR #3843](https://github.com/huggingface/sentence-transformers/pull/3843) | ⏳ Open |
+| 9 | 2026-06-30 | [huggingface/safetensors](https://github.com/huggingface/safetensors) | Docs — add missing docstrings to `storage_ptr`, `storage_size`, `rename`, `check_file_size`, `convert_file` | [PR #806](https://github.com/safetensors/safetensors/pull/806) | ⏳ Open |
+| 10 | 2026-06-30 | [nltk/nltk](https://github.com/nltk/nltk) | Docs — add missing docstrings to 5 utility functions in `compat.py` + `decorators.py` | [PR #3688](https://github.com/nltk/nltk/pull/3688) | ⏳ Open |
+| 11 | 2026-06-30 | [wandb/wandb](https://github.com/wandb/wandb) | Docs — add missing docstrings to 7 public env helper functions in `env.py` | [PR #12133](https://github.com/wandb/wandb/pull/12133) | 🚫 Closed — repo has anti-AI-PR policy (docs/general_advice.md) |
+| 12 | 2026-06-29 | [explosion/spaCy](https://github.com/explosion/spaCy) | Docs — add missing docstrings to `is_unconstrained_version`, `create_default_optimizer`, `check_lexeme_norms`, `raise_error`, `ignore_error`, `setup_cli` | [PR #13987](https://github.com/explosion/spaCy/pull/13987) | ⏳ Open |
+| 13 | 2026-07-02 | [pallets/click](https://github.com/pallets/click) | Docs — add missing docstrings to `measure_table` and `iter_rows` in `formatting.py` | [PR #3659](https://github.com/pallets/click/pull/3659) | 🚫 Closed — maintainer closed silently (too minor) |
+| 14 | 2026-07-03 | [joblib/joblib](https://github.com/joblib/joblib) | Docs — add missing docstrings to `format_time`, `short_format_time`, `pformat` in `logger.py` | [PR #1811](https://github.com/joblib/joblib/pull/1811) | ⏳ Open |
+| 15 | 2026-07-03 | [huggingface/lighteval](https://github.com/huggingface/lighteval) | Docs — add missing docstrings to `is_multilingual_package_available`, `raise_if_package_not_available`, `parse_specified_backends` in `utils/imports.py` | [PR #1282](https://github.com/huggingface/lighteval/pull/1282) | ⏳ Open |
+| 16 | 2026-07-04 | [explosion/spaCy](https://github.com/explosion/spaCy) | Docs — add missing docstrings to 6 public utility functions in `lang/en/__init__.py` + `cli/validate.py` | [PR #13987](https://github.com/explosion/spaCy/pull/13987) | ⏳ Open |
+| 17 | 2026-07-04 | [joblib/joblib](https://github.com/joblib/joblib) | Docs — add missing docstrings to `format_time`, `short_format_time`, `pformat` in `logger.py` | [PR #1811](https://github.com/joblib/joblib/pull/1811) | ⏳ Open |
+| 18 | 2026-07-04 | [huggingface/lighteval](https://github.com/huggingface/lighteval) | Docs — add missing docstrings to `is_multilingual_package_available`, `raise_if_package_not_available`, `parse_specified_backends` | [PR #1282](https://github.com/huggingface/lighteval/pull/1282) | ⏳ Open |
+| 19 | 2026-07-04 | [huggingface/nanotron](https://github.com/huggingface/nanotron) | Docs — add missing docstrings to `get_parameter_and_parent_module`, `get_untyped_storage`, `tensor_from_untyped_storage`, `find_free_port` in `utils.py` | [PR #407](https://github.com/huggingface/nanotron/pull/407) | ⏳ Open |
+| 20 | 2026-07-04 | [paramiko/paramiko](https://github.com/paramiko/paramiko) | Docs — add missing docstrings to `format_binary`, `format_binary_line`, `safe_string`, `clamp_value` in `util.py` | [PR #2641](https://github.com/paramiko/paramiko/pull/2641) | ⏳ Open |
+| 21 | 2026-07-04 | [EleutherAI/lm-evaluation-harness](https://github.com/EleutherAI/lm-evaluation-harness) | Docs — add missing docstrings to `is_torch_available`, `is_transformers_available`, `hash_string`, `join_iters`, `group` in `utils.py` | [PR #3909](https://github.com/EleutherAI/lm-evaluation-harness/pull/3909) | ⏳ Open |
+| 22 | 2026-07-04 | [numba/numba](https://github.com/numba/numba) | Docs — add missing docstrings to `runonce`, `format_time`, `benchmark` in `numba/core/utils.py` | [PR #10686](https://github.com/numba/numba/pull/10686) | ⏳ Open |
+| 23 | 2026-07-04 | [huggingface/nanotron](https://github.com/huggingface/nanotron) | Docs — add missing docstrings to `set_random_seed`, `set_random_state`, `get_synced_random_state` in `random.py` | [PR #408](https://github.com/huggingface/nanotron/pull/408) | ⏳ Open |
+| 24 | 2026-07-04 | [huggingface/nanotron](https://github.com/huggingface/nanotron) | Docs — add missing docstrings to `assert_fail_except_rank_with`, `before_tbi_sanity_checks`, `after_tbi_sanity_checks` in `sanity_checks.py` | [PR #409](https://github.com/huggingface/nanotron/pull/409) | ⏳ Open |
+| 25 | 2026-07-04 | [stanfordnlp/stanza](https://github.com/stanfordnlp/stanza) | Docs — add missing docstrings to `harmonic_mean`, `change_lr`, `flatten_indices`, `normalize_text` in `models/common/utils.py` | [PR #1634](https://github.com/stanfordnlp/stanza/pull/1634) | ⏳ Open |
+| 26 | 2026-07-04 | [google-deepmind/optax](https://github.com/google-deepmind/optax) | Docs — add missing docstrings to `tile_second_to_last_dim`, `multi_normal`, `parse_version` in `_src/utils.py` | [PR #1720](https://github.com/google-deepmind/optax/pull/1720) | ⏳ Open |
+| 27 | 2026-07-04 | [stanfordnlp/stanza](https://github.com/stanfordnlp/stanza) | Docs — add missing docstrings to `clean_props_file`, `is_alive`, `atexit_kill` in `server/client.py` | [PR #1635](https://github.com/stanfordnlp/stanza/pull/1635) | ⏳ Open |
+| 28 | 2026-07-04 | [stanfordnlp/stanza](https://github.com/stanfordnlp/stanza) | Docs — add missing docstrings to `process_sentence`, `output_predictions` in `models/tokenization/utils.py` | [PR #1636](https://github.com/stanfordnlp/stanza/pull/1636) | ⏳ Open |
+| 29 | 2026-07-04 | [EleutherAI/lm-evaluation-harness](https://github.com/EleutherAI/lm-evaluation-harness) | Docs — add missing docstrings to `print_writeout`, `get_sample_size` in `evaluator_utils.py` | [PR #3910](https://github.com/EleutherAI/lm-evaluation-harness/pull/3910) | ⏳ Open |
+| 30 | 2026-07-04 | [google-deepmind/optax](https://github.com/google-deepmind/optax) | Docs — add missing docstring to `get_spectral_radius_upper_bound` in `_src/linear_algebra.py` | [PR #1721](https://github.com/google-deepmind/optax/pull/1721) | ⏳ Open |
 
 ---
 
@@ -50,14 +78,16 @@
 
 ## Stats
 
-- **Total PRs opened:** 7 (6 on Day 1, 1 on Day 2)
-- **Total PRs merged:** 0 (check back in 24–72h)
-- **PRs closed by bot:** 5 (LangChain requires issue assignment before PR — lesson learned on Day 1)
-- **Active open PRs:** 2 (awesome-LangGraph #76, RAGAS #2798)
-- **LangChain issues awaiting assignment:** 5 (fixes ready, PRs will open the moment assigned)
-- **LangGraph issues awaiting assignment:** 4 (fixes ready, PRs will open the moment assigned)
-- **Current day:** Day 2
-- **Target repos:** awesome-LangGraph ✅, LangChain (need assignment), RAGAS ✅, LangGraph (need assignment)
+- **Total PRs opened:** 35 (6 on Day 1, 1 each on Days 2–15, 15 on Days 16–30 across new repos)
+- **Total PRs merged:** 0
+- **PRs closed by bot:** 5 (LangChain — requires issue assignment)
+- **PRs closed by maintainer:** 2 (wandb #12133 anti-AI policy; click #3659 too minor)
+- **Active open PRs:** 28
+- **LangChain issues awaiting assignment:** 5
+- **LangGraph issues awaiting assignment:** 4
+- **Current day:** Day 30 ✅ CHALLENGE COMPLETE
+- **SKIP LIST:** wandb, peft, trl, litellm, diffusers, huggingface_hub, tokenizers, pytorch, keras, scikit-learn, openai-python, haystack, mlflow, scikit-image, chroma, transformers, rich, timm, instructor, gradio
+- **Safe repos (ruff-only, no restrictions):** smolagents ✅, evaluate ✅, accelerate ✅, datasets ✅, optimum ✅, sentence-transformers ✅, safetensors ✅, spaCy ✅, joblib ✅, lighteval ✅, nanotron ✅, paramiko ✅, lm-evaluation-harness ✅, numba ✅, stanza ✅, optax ✅
 
 ---
 
