@@ -107,6 +107,7 @@ Every active repo has a `good first issue` label. These are bugs the maintainer 
 | Day | Date | Repo | Type | PR | Status |
 |-----|------|------|------|----|--------|
 | 31 | 2026-07-04 | [huggingface/evaluate](https://github.com/huggingface/evaluate) | Bug fix — export `EvaluationModuleError`, wrap `_compute` failures (fixes #758) | [#774](https://github.com/huggingface/evaluate/pull/774) | ⏳ Open |
+| 32 | 2026-07-05 | [huggingface/smolagents](https://github.com/huggingface/smolagents) | Bug fix — replace `assert` with explicit check in `_validate_final_answer` + test (fixes #2456) | [#2469](https://github.com/huggingface/smolagents/pull/2469) | ⏳ Open |
 
 ---
 
@@ -210,11 +211,11 @@ Your GitHub will say yes — with receipts.
 ## Current Stats
 
 - **Phase:** Phase 2 — Days 31–60
-- **Total PRs opened:** 36
+- **Total PRs opened:** 37
 - **Total PRs merged:** 0 (Phase 1 pending — Phase 2 will change this)
 - **PRs closed by bot:** 5 (LangChain — requires issue assignment)
 - **PRs closed by maintainer:** 2 (wandb anti-AI policy · click too minor)
-- **Active open PRs:** 29
+- **Active open PRs:** 30
 - **LangChain issues awaiting assignment:** 5
 - **LangGraph issues awaiting assignment:** 4
 
