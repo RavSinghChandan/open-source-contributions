@@ -112,6 +112,7 @@ Every active repo has a `good first issue` label. These are bugs the maintainer 
 | 34 | 2026-07-11 | [joblib/joblib](https://github.com/joblib/joblib) | Review response — addressed maintainer comments on #1811 (docstring spacing) and #1812 (dropped logger.py overlap, `os.PathLike` docstrings) | [#1811](https://github.com/joblib/joblib/pull/1811) · [#1812](https://github.com/joblib/joblib/pull/1812) | ⏳ Open |
 | 35 | 2026-07-11 | [nltk/nltk](https://github.com/nltk/nltk) | Test coverage — regression tests for untested `transitive_closure` in `util.py` (chain, reflexive, cycle, empty, no-mutation) | [#3703](https://github.com/nltk/nltk/pull/3703) | ⏳ Open |
 | 36 | 2026-07-11 | [UKPLab/sentence-transformers](https://github.com/UKPLab/sentence-transformers) | Test coverage — regression tests for untested `append_to_last_row` in `util/misc.py` (append, multi-value, header-only + empty no-op) | [#3855](https://github.com/UKPLab/sentence-transformers/pull/3855) | ⏳ Open |
+| 37 | 2026-07-11 | [joblib/joblib](https://github.com/joblib/joblib) | Test coverage — regression tests for untested `format_time` + `short_format_time` in `logger.py` (both branches, cross-platform via `_squeeze_time`) | [#1814](https://github.com/joblib/joblib/pull/1814) | ⏳ Open |
 
 ---
 
