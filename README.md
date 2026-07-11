@@ -115,6 +115,7 @@ Every active repo has a `good first issue` label. These are bugs the maintainer 
 | 37 | 2026-07-11 | [joblib/joblib](https://github.com/joblib/joblib) | Test coverage — regression tests for untested `format_time` + `short_format_time` in `logger.py` (both branches, cross-platform via `_squeeze_time`) | [#1814](https://github.com/joblib/joblib/pull/1814) | ⏳ Open |
 | 38 | 2026-07-11 | [explosion/spaCy](https://github.com/explosion/spaCy) | Test coverage — regression tests for untested `get_minor_version_range`, `get_base_version`, `split_requirement` in `util.py` (+ signed contributor agreement, first PR) | [#13991](https://github.com/explosion/spaCy/pull/13991) | ⏳ Open |
 | 39 | 2026-07-11 | [stanfordnlp/stanza](https://github.com/stanfordnlp/stanza) | Test coverage — regression tests for untested `harmonic_mean` + `get_adaptive_eval_interval` in `common/utils.py` (weighted/zero/assert + banker's-rounding edge) | [#1641](https://github.com/stanfordnlp/stanza/pull/1641) | ⏳ Open |
+| 40 | 2026-07-11 | [huggingface/evaluate](https://github.com/huggingface/evaluate) | Code fix — remove mutable default arg (`invert_range=[]` → `None` + guard) in `radar_plot` | [#781](https://github.com/huggingface/evaluate/pull/781) | ⏳ Open |
 
 ---
 
