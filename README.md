@@ -110,6 +110,7 @@ Every active repo has a `good first issue` label. These are bugs the maintainer 
 | 32 | 2026-07-05 | [huggingface/smolagents](https://github.com/huggingface/smolagents) | Bug fix — replace `assert` with explicit check in `_validate_final_answer` + test (fixes #2456) | [#2469](https://github.com/huggingface/smolagents/pull/2469) | ⏳ Open |
 | 33 | 2026-07-06 | [joblib/joblib](https://github.com/joblib/joblib) | Bug fix — accept any `os.PathLike` in `dump()` + `load()`, not just `pathlib.Path` + test (fixes #1784) | [#1812](https://github.com/joblib/joblib/pull/1812) | ⏳ Open |
 | 34 | 2026-07-11 | [joblib/joblib](https://github.com/joblib/joblib) | Review response — addressed maintainer comments on #1811 (docstring spacing) and #1812 (dropped logger.py overlap, `os.PathLike` docstrings) | [#1811](https://github.com/joblib/joblib/pull/1811) · [#1812](https://github.com/joblib/joblib/pull/1812) | ⏳ Open |
+| 35 | 2026-07-11 | [nltk/nltk](https://github.com/nltk/nltk) | Test coverage — regression tests for untested `transitive_closure` in `util.py` (chain, reflexive, cycle, empty, no-mutation) | [#3703](https://github.com/nltk/nltk/pull/3703) | ⏳ Open |
 
 ---
 
