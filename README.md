@@ -32,7 +32,7 @@ Phase 5 → Core contributor, public recognition      [VISION]
 - click maintainers close tiny PRs silently — need more substance
 - Joblib, lighteval, nanotron, stanza, optax have active maintainers who review quickly
 
-**Phase 1 result:** 35 PRs opened · 0 merged (yet) · 28 active open · 30 log files · 15 repos touched
+**Phase 1 result:** 35 PRs opened · 1 merged ([#3843](https://github.com/huggingface/sentence-transformers/pull/3843)) · 28 active open · 30 log files · 15 repos touched
 
 **Phase 1 PRs:**
 
@@ -49,7 +49,7 @@ Phase 5 → Core contributor, public recognition      [VISION]
 | 5 | 2026-06-30 | [huggingface/accelerate](https://github.com/huggingface/accelerate) | Docs — 3 missing docstrings in `operations.py` | [#4095](https://github.com/huggingface/accelerate/pull/4095) | ⏳ Open |
 | 6 | 2026-06-30 | [huggingface/datasets](https://github.com/huggingface/datasets) | Docs — 5 missing docstrings in `py_utils.py` | [#8294](https://github.com/huggingface/datasets/pull/8294) | ⏳ Open |
 | 7 | 2026-06-30 | [huggingface/optimum](https://github.com/huggingface/optimum) | Docs — 5 missing docstrings in `testing_utils.py` + `save_utils.py` | [#2454](https://github.com/huggingface/optimum/pull/2454) | ⏳ Open |
-| 8 | 2026-06-30 | [UKPLab/sentence-transformers](https://github.com/UKPLab/sentence-transformers) | Docs — `Dense` methods + `to_scipy_coo` | [#3843](https://github.com/UKPLab/sentence-transformers/pull/3843) | ⏳ Open |
+| 8 | 2026-06-30 | [huggingface/sentence-transformers](https://github.com/huggingface/sentence-transformers) | Docs — `to_scipy_coo` in `util/tensor.py` (trimmed from `Dense` methods per review) | [#3843](https://github.com/huggingface/sentence-transformers/pull/3843) | ✅ **MERGED** |
 | 9 | 2026-06-30 | [huggingface/safetensors](https://github.com/huggingface/safetensors) | Docs — `storage_ptr`, `storage_size`, `rename`, `check_file_size` | [#806](https://github.com/huggingface/safetensors/pull/806) | ⏳ Open |
 | 10 | 2026-06-30 | [nltk/nltk](https://github.com/nltk/nltk) | Docs — 5 missing docstrings in `compat.py` + `decorators.py` | [#3688](https://github.com/nltk/nltk/pull/3688) | ⏳ Open |
 | 11 | 2026-06-30 | [wandb/wandb](https://github.com/wandb/wandb) | Docs — 7 env helper functions in `env.py` | [#12133](https://github.com/wandb/wandb/pull/12133) | 🚫 Closed — anti-AI-PR policy |
@@ -116,6 +116,7 @@ Every active repo has a `good first issue` label. These are bugs the maintainer 
 | 38 | 2026-07-11 | [explosion/spaCy](https://github.com/explosion/spaCy) | Test coverage — regression tests for untested `get_minor_version_range`, `get_base_version`, `split_requirement` in `util.py` (+ signed contributor agreement, first PR) | [#13991](https://github.com/explosion/spaCy/pull/13991) | ⏳ Open |
 | 39 | 2026-07-11 | [stanfordnlp/stanza](https://github.com/stanfordnlp/stanza) | Test coverage — regression tests for untested `harmonic_mean` + `get_adaptive_eval_interval` in `common/utils.py` (weighted/zero/assert + banker's-rounding edge) | [#1641](https://github.com/stanfordnlp/stanza/pull/1641) | ❌ Closed — maintainer flagged as spam |
 | 40 | 2026-07-11 | [huggingface/evaluate](https://github.com/huggingface/evaluate) | Code fix — remove mutable default arg (`invert_range=[]` → `None` + guard) in `radar_plot` | [#781](https://github.com/huggingface/evaluate/pull/781) | ⏳ Open |
+| 41 | 2026-08-03 | [huggingface/sentence-transformers](https://github.com/huggingface/sentence-transformers) | Review response — trimmed #3843 to `to_scipy_coo` per maintainer, rebased off 30-commit drift, matched `util/` docstring style, re-requested review | [#3843](https://github.com/huggingface/sentence-transformers/pull/3843) | ✅ **MERGED** |
 
 ---
 
@@ -219,11 +220,11 @@ Your GitHub will say yes — with receipts.
 ## Current Stats
 
 - **Phase:** Phase 2 — Days 31–60
-- **Total PRs opened:** 38
-- **Total PRs merged:** 0 (Phase 1 pending — Phase 2 will change this)
+- **Total PRs opened:** 45
+- **Total PRs merged:** 4 — [joblib #1811](https://github.com/joblib/joblib/pull/1811) · [joblib #1812](https://github.com/joblib/joblib/pull/1812) · [sentence-transformers #3855](https://github.com/huggingface/sentence-transformers/pull/3855) · [sentence-transformers #3843](https://github.com/huggingface/sentence-transformers/pull/3843)
 - **PRs closed by bot:** 5 (LangChain — requires issue assignment)
-- **PRs closed by maintainer:** 2 (wandb anti-AI policy · click too minor)
-- **Active open PRs:** 31
+- **PRs closed by maintainer:** 8 (wandb · click · stanza ×4 · nltk · joblib #1814)
+- **Active open PRs:** 28
 - **LangChain issues awaiting assignment:** 5
 - **LangGraph issues awaiting assignment:** 4
 
