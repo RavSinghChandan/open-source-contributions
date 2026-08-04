@@ -110,13 +110,14 @@ Every active repo has a `good first issue` label. These are bugs the maintainer 
 | 32 | 2026-07-05 | [huggingface/smolagents](https://github.com/huggingface/smolagents) | Bug fix — replace `assert` with explicit check in `_validate_final_answer` + test (fixes #2456) | [#2469](https://github.com/huggingface/smolagents/pull/2469) | ⏳ Open |
 | 33 | 2026-07-06 | [joblib/joblib](https://github.com/joblib/joblib) | Bug fix — accept any `os.PathLike` in `dump()` + `load()`, not just `pathlib.Path` + test (fixes #1784) | [#1812](https://github.com/joblib/joblib/pull/1812) | ⏳ Open |
 | 34 | 2026-07-11 | [joblib/joblib](https://github.com/joblib/joblib) | Review response — addressed maintainer comments on #1811 (docstring spacing) and #1812 (dropped logger.py overlap, `os.PathLike` docstrings) | [#1811](https://github.com/joblib/joblib/pull/1811) · [#1812](https://github.com/joblib/joblib/pull/1812) | ⏳ Open |
-| 35 | 2026-07-11 | [nltk/nltk](https://github.com/nltk/nltk) | Test coverage — regression tests for untested `transitive_closure` in `util.py` (chain, reflexive, cycle, empty, no-mutation) | [#3703](https://github.com/nltk/nltk/pull/3703) | ⏳ Open |
+| 35 | 2026-07-11 | [nltk/nltk](https://github.com/nltk/nltk) | Test coverage — regression tests for untested `transitive_closure` in `util.py` (chain, reflexive, cycle, empty, no-mutation + set-identity) | [#3703](https://github.com/nltk/nltk/pull/3703) | ✅ **MERGED** |
 | 36 | 2026-07-11 | [UKPLab/sentence-transformers](https://github.com/UKPLab/sentence-transformers) | Test coverage — regression tests for untested `append_to_last_row` in `util/misc.py` (append, multi-value, header-only + empty no-op) | [#3855](https://github.com/UKPLab/sentence-transformers/pull/3855) | ✅ **MERGED** |
 | 37 | 2026-07-11 | [joblib/joblib](https://github.com/joblib/joblib) | Test coverage — regression tests for untested `format_time` + `short_format_time` in `logger.py` (both branches, cross-platform via `_squeeze_time`) | [#1814](https://github.com/joblib/joblib/pull/1814) | ⏳ Open |
 | 38 | 2026-07-11 | [explosion/spaCy](https://github.com/explosion/spaCy) | Test coverage — regression tests for untested `get_minor_version_range`, `get_base_version`, `split_requirement` in `util.py` (+ signed contributor agreement, first PR) | [#13991](https://github.com/explosion/spaCy/pull/13991) | ⏳ Open |
 | 39 | 2026-07-11 | [stanfordnlp/stanza](https://github.com/stanfordnlp/stanza) | Test coverage — regression tests for untested `harmonic_mean` + `get_adaptive_eval_interval` in `common/utils.py` (weighted/zero/assert + banker's-rounding edge) | [#1641](https://github.com/stanfordnlp/stanza/pull/1641) | ❌ Closed — maintainer flagged as spam |
 | 40 | 2026-07-11 | [huggingface/evaluate](https://github.com/huggingface/evaluate) | Code fix — remove mutable default arg (`invert_range=[]` → `None` + guard) in `radar_plot` | [#781](https://github.com/huggingface/evaluate/pull/781) | ⏳ Open |
 | 41 | 2026-08-03 | [huggingface/sentence-transformers](https://github.com/huggingface/sentence-transformers) | Review response — trimmed #3843 to `to_scipy_coo` per maintainer, rebased off 30-commit drift, matched `util/` docstring style, re-requested review | [#3843](https://github.com/huggingface/sentence-transformers/pull/3843) | ✅ **MERGED** |
+| 42 | 2026-08-04 | [nltk/nltk](https://github.com/nltk/nltk) | Review response — strengthened the non-mutation test on #3703 to assert set *identity* (not just equality) after `ekaf` raised the unresolved review concern; mutation-tested that the old assertion missed a rebind | [#3703](https://github.com/nltk/nltk/pull/3703) | ✅ **MERGED** |
 
 ---
 
@@ -221,10 +222,10 @@ Your GitHub will say yes — with receipts.
 
 - **Phase:** Phase 2 — Days 31–60
 - **Total PRs opened:** 45
-- **Total PRs merged:** 4 — [joblib #1811](https://github.com/joblib/joblib/pull/1811) · [joblib #1812](https://github.com/joblib/joblib/pull/1812) · [sentence-transformers #3855](https://github.com/huggingface/sentence-transformers/pull/3855) · [sentence-transformers #3843](https://github.com/huggingface/sentence-transformers/pull/3843)
+- **Total PRs merged:** 5 — [joblib #1811](https://github.com/joblib/joblib/pull/1811) · [joblib #1812](https://github.com/joblib/joblib/pull/1812) · [sentence-transformers #3855](https://github.com/huggingface/sentence-transformers/pull/3855) · [sentence-transformers #3843](https://github.com/huggingface/sentence-transformers/pull/3843) · [nltk #3703](https://github.com/nltk/nltk/pull/3703)
 - **PRs closed by bot:** 5 (LangChain — requires issue assignment)
 - **PRs closed by maintainer:** 8 (wandb · click · stanza ×4 · nltk · joblib #1814)
-- **Active open PRs:** 28
+- **Active open PRs:** 27
 - **LangChain issues awaiting assignment:** 5
 - **LangGraph issues awaiting assignment:** 4
 
