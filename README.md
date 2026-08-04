@@ -118,6 +118,8 @@ Every active repo has a `good first issue` label. These are bugs the maintainer 
 | 40 | 2026-07-11 | [huggingface/evaluate](https://github.com/huggingface/evaluate) | Code fix — remove mutable default arg (`invert_range=[]` → `None` + guard) in `radar_plot` | [#781](https://github.com/huggingface/evaluate/pull/781) | ⏳ Open |
 | 41 | 2026-08-03 | [huggingface/sentence-transformers](https://github.com/huggingface/sentence-transformers) | Review response — trimmed #3843 to `to_scipy_coo` per maintainer, rebased off 30-commit drift, matched `util/` docstring style, re-requested review | [#3843](https://github.com/huggingface/sentence-transformers/pull/3843) | ✅ **MERGED** |
 | 42 | 2026-08-04 | [nltk/nltk](https://github.com/nltk/nltk) | Review response — strengthened the non-mutation test on #3703 to assert set *identity* (not just equality) after `ekaf` raised the unresolved review concern; mutation-tested that the old assertion missed a rebind | [#3703](https://github.com/nltk/nltk/pull/3703) | ✅ **MERGED** |
+| 43 | 2026-07-27 | [py-pdf/pypdf](https://github.com/py-pdf/pypdf) | **Bug fix** — 2/4-bit `/DeviceRGB` images forced to palette mode left an unrecognized Pillow mode and broke extraction (#3924); now unpacks interleaved colour components (`colors=`) and scales them to full range (`scale=`) | [#3929](https://github.com/py-pdf/pypdf/pull/3929) | ✅ **MERGED** |
+| 44 | 2026-08-04 | [py-pdf/pypdf](https://github.com/py-pdf/pypdf) | Review response — took maintainer's `int(mode[0])` suggestion, proved the new `bits2byte` params survive a general fix, then rebased off the `_handle_flate` reorder (#3904) to clear the merge conflict | [#3929](https://github.com/py-pdf/pypdf/pull/3929) | ✅ **MERGED** |
 
 ---
 
@@ -222,10 +224,10 @@ Your GitHub will say yes — with receipts.
 
 - **Phase:** Phase 2 — Days 31–60
 - **Total PRs opened:** 45
-- **Total PRs merged:** 5 — [joblib #1811](https://github.com/joblib/joblib/pull/1811) · [joblib #1812](https://github.com/joblib/joblib/pull/1812) · [sentence-transformers #3855](https://github.com/huggingface/sentence-transformers/pull/3855) · [sentence-transformers #3843](https://github.com/huggingface/sentence-transformers/pull/3843) · [nltk #3703](https://github.com/nltk/nltk/pull/3703)
+- **Total PRs merged:** 6 — [joblib #1811](https://github.com/joblib/joblib/pull/1811) · [joblib #1812](https://github.com/joblib/joblib/pull/1812) · [sentence-transformers #3855](https://github.com/huggingface/sentence-transformers/pull/3855) · [sentence-transformers #3843](https://github.com/huggingface/sentence-transformers/pull/3843) · [nltk #3703](https://github.com/nltk/nltk/pull/3703) · [pypdf #3929](https://github.com/py-pdf/pypdf/pull/3929) ← **real bug fix**
 - **PRs closed by bot:** 5 (LangChain — requires issue assignment)
 - **PRs closed by maintainer:** 8 (wandb · click · stanza ×4 · nltk · joblib #1814)
-- **Active open PRs:** 27
+- **Active open PRs:** 26
 - **LangChain issues awaiting assignment:** 5
 - **LangGraph issues awaiting assignment:** 4
 
