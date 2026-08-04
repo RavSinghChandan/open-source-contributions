@@ -7,12 +7,20 @@
 
 ## Step 1 — Where to send it
 
-Open **https://github.com/mpdavis/python-jose/security/advisories/new**
+**CORRECTED 2026-08-04: private reporting is NOT available on this repo.**
+`GET /repos/mpdavis/python-jose/private-vulnerability-reporting` returns
+`{"enabled": false}`, so `/security/advisories/new` 404s for non-owners. A 302 on
+that URL is only a login redirect — never read it as "the form exists". There is
+also no `SECURITY.md` and no security contact anywhere in the repo.
 
-That is GitHub's private advisory form — only the maintainers see it. The repo has
-no `SECURITY.md` and has never published an advisory, so if the form is not
-available, fall back to a normal issue comment on #408 **without** the exploit
-details (use the short version at the bottom).
+Issue #408 has been public since 2026-05-26, so the vulnerability is already
+disclosed. What we control is not adding a working exploit to it. **Channel used:
+a public comment on #408 with no reproducer** (the short version at the bottom of
+this file). Sent 2026-08-04.
+
+Maintainer emails exist on their profiles (`michael@mpdavis.com`,
+`hello@asherfoa.com`) but cold security email is a poor first contact — spam risk,
+and reaches only one person.
 
 Maintainers are alive: `asherf` (merges everything, active 2026-07-30),
 `mpdavis` (owner, active 2026-07-07).
