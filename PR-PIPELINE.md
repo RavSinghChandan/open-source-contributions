@@ -6,6 +6,22 @@ engage-first, never a batch.
 **Vetted:** 2026-08-04 · **Re-check claim status before starting any of these** —
 unclaimed today is not unclaimed next month.
 
+## STATUS — all 4 claimed 2026-08-04, awaiting maintainer replies
+
+| Issue | Claimed at (UTC) | Waiting on | Next step |
+|---|---|---|---|
+| [aiokafka #1173](https://github.com/aio-libs/aiokafka/issues/1173) | 01:55 | `ods` | Direction: match Java (leave position) vs opt-in skip |
+| [python-jose #408](https://github.com/mpdavis/python-jose/issues/408) | 02:18 | `asherf` / `mpdavis` | Fix + test fully verified — PR ready on their word |
+| [authlib #740](https://github.com/lepture/authlib/issues/740) | 02:23 | `azmeuk` (he filed it) | Where the consent check belongs |
+| [authlib #627](https://github.com/lepture/authlib/issues/627) | 02:24 | `azmeuk` / `lepture` | Split description fix from deprecating the check? |
+
+**Do NOT post again on these until a maintainer replies** — chasing reads as
+pressure and is the pattern that got the stanza ban. Check for replies once a
+day; when one lands, build the fix and hand over the branch.
+
+**Cadence rule:** 4 claims in one day is already the ceiling. No new claims until
+at least one of these resolves.
+
 ---
 
 ## 1. aiokafka #1173 — Fetcher skips a record it never returned
