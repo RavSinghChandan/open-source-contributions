@@ -134,6 +134,61 @@ timeline.**
 
 ---
 
+## 4. authlib #740 — `consent_required` never raised (OIDC core §3.1.2.6)
+
+**[lepture/authlib#740](https://github.com/lepture/authlib/issues/740)** · 5389★ ·
+authlib is the library whose CVE mirrors your python-jose #408 finding
+
+**Filed by `azmeuk`, an active maintainer** (merged #916 on 2026-07-30, #912 on
+2026-07-17) — maintainer-confirmed by construction, same standing as pypdf #3367.
+
+OIDC core §3.1.2.6 requires `consent_required` when `prompt=none` but the user
+has not consented. `validate_request_prompt()` in
+`authlib/oidc/core/grants/util.py:31` only raises `LoginRequiredError`, and only
+when there is **no** end user:
+
+```python
+    if prompt == "none" and not end_user:
+        raise LoginRequiredError(...)
+```
+
+A logged-in user who has not consented falls straight through.
+
+**Verified 2026-08-04:** `consent_required` returns **zero code hits** across the
+whole repo — it is never raised anywhere, exactly as reported. 0 assignees,
+0 comments, no linked PRs. One open PR (#907) touches the same file but adds
+`prompt=create` for issue #735 — adjacent, not overlapping.
+
+**Repo is healthy:** 5 merges in the last 6 weeks by two maintainers
+(`azmeuk`, `lepture`). No CLAUDE.md/AGENTS.md, no CONTRIBUTING AI policy.
+
+**→ ENGAGE FIRST** — azmeuk filed it, so ask which error shape he wants before
+coding (raise in `validate_request_prompt`, or a new hook).
+
+---
+
+## 5. authlib #627 — OAuth1 wrongly enforces TLS (copy-paste from OAuth2)
+
+**[lepture/authlib#627](https://github.com/lepture/authlib/issues/627)** · 5389★
+
+`OAuth1Request.__init__` calls `InsecureTransportError.check(uri)`, but OAuth 1.0
+is transport-independent — it signs requests rather than relying on TLS. The
+error text gives the copy-paste away: `description = "OAuth 2 MUST utilize https."`
+on an **OAuth1** error class.
+
+- `authlib/oauth1/rfc5849/wrapper.py:18` — `InsecureTransportError.check(uri)`
+- `authlib/oauth1/rfc5849/errors.py:29` — `"OAuth 2 MUST utilize https."`
+
+**Verified 2026-08-04:** both still present in current source. Open since
+2024-02-17 with **0 comments, 0 assignees, no linked PRs**, and no open PR
+touches either file.
+
+**Caveat:** removing the check is a behaviour change — apps relying on it would
+stop getting the error. Likely needs a deprecation path, so **ask first**. The
+description-string fix is uncontroversial on its own and could ship separately.
+
+---
+
 ## Rejected — do not revisit
 
 | Issue | Why |
@@ -150,6 +205,10 @@ timeline.**
 | pypdf #3467 / #3302 | PRs #3577, #3785 / #3916 open. |
 | python-multipart #31 | PR #306 open. |
 | uvicorn #2722 | PR #3037 open. |
+| asyncpg #1335 / #1317 / #1340 / #1310 | PRs #1339 / #19 / #113 / #1312 open. |
+| marshmallow #2999 | PR #3000 open. |
+| marshmallow #2893 | 13 linked PRs; maintainer `lafrech` engaged. |
 
-**Blocked repos** (CLAUDE.md/AGENTS.md → never touch): redis-py, aiohttp —
-add to the skip list alongside the existing entries.
+**Blocked repos** (CLAUDE.md/AGENTS.md → never touch): redis-py, aiohttp,
+pyca/cryptography, agronholm/anyio — add to the skip list.
+**Also skip:** pallets/* (click #3659 retitled "AI junk" by davidism).
