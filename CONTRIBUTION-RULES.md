@@ -126,20 +126,107 @@ Closes #2777
 
 ---
 
+## Rule #8 — VET FIRST, DEEP-DIVE SECOND. Never the other way round.
+
+> **Added 2026-08-04.** The order is the rule. Picking an issue that looks good and
+> *then* discovering it is taken, or was never a bug, is how days get burned.
+
+The expensive mistake is not "picking the wrong bug" — it's picking one
+**blindly**, sinking hours into understanding it, and only then finding out
+someone already did it. Cheap checks come first. Expensive understanding comes
+last, and only for what survives.
+
+### The 4 gates, in this exact order
+
+**Gate 1 — Is the repo safe?** (30 seconds, kills whole repos at once)
+```bash
+gh api repos/OWNER/REPO/contents --jq '.[].name' | grep -iE 'CLAUDE|AGENTS'
+gh api repos/OWNER/REPO/contents/.github/workflows --jq '.[].name' | grep -iE 'require|assign'
+gh api repos/OWNER/REPO --jq '"\(.stargazers_count)★ push=\(.pushed_at[0:10])"'
+```
+CLAUDE.md / AGENTS.md → abort. Assignment bot → issue-comment flow first.
+Last push older than ~3 months → the PR will rot; deprioritise.
+
+**Gate 2 — Is it UNCLAIMED?** (the gate that matters most — run before reading the issue body)
+```bash
+# linked PRs — the single best claim signal
+gh api repos/OWNER/REPO/issues/N/timeline \
+  --jq '[.[]|select(.event=="cross-referenced" and .source.issue.pull_request!=null)
+        |"\(.source.issue.number)/\(.source.issue.state)"]|join(",")'
+
+# who is already talking in the thread
+gh api repos/OWNER/REPO/issues/N/comments --jq '[.[].user.login]|unique|join(",")'
+
+# does any OPEN PR touch the same file/lines?
+for n in $(gh pr list -R OWNER/REPO --state open --limit 60 --json number --jq '.[].number'); do
+  gh api repos/OWNER/REPO/pulls/$n/files --jq '[.[].filename]|join(" ")' | grep -q "TARGET_FILE" && echo "PR #$n overlaps"
+done
+```
+Any open linked PR → skip. Somebody said "I'm working on this" **and** delivered
+→ skip. Somebody asked months ago and **never delivered** → fair game (check
+their PR history: `gh api "search/issues?q=repo:OWNER/REPO+type:pr+author:THEM"`).
+
+**Gate 3 — Is it actually a bug?** (verify the claim against CURRENT source, never trust the issue text)
+- Read the cited lines on `master` **today** — files move, code gets refactored,
+  line numbers in old issues go stale.
+- If a documented user-tunable parameter fixes it → **it is not a bug.**
+- Reproduce locally if the environment allows it. If it needs infrastructure
+  you don't have (a Kafka broker, a 4GB file, Windows), you cannot defend the
+  fix to a reviewer — downgrade it.
+- If the reporter never answered the maintainer's follow-up question → unconfirmed.
+
+**Gate 4 — Only now, deep-dive.** Understand the fix well enough to explain it
+in your own words to a reviewer. If you can't, don't open the PR.
+
+### What each gate has actually caught (real examples, 2026-08-04)
+
+| Candidate | Died at | Why |
+|---|---|---|
+| pdfplumber #1380 | Gate 3 | Reproduced it — but `y_tolerance=3.5` fixes it. Documented knob, not a defect. Changing the default breaks other PDFs. |
+| pdfplumber #1336 | Gate 2 | Three competing PRs (#1362/#1363/#1364) already open. |
+| pdfplumber #1360 | Gate 3 | Reporter's own `snap_x_tolerance=8` fixes it. |
+| soundfile #473 | Gate 3 | Student's own array-shape error, not a library bug. |
+| pyjwt #1193 | Gate 3 | **A maintainer said "pr welcome" — and the bug did not exist.** `encode_token` is absent from released 2.13.0 *and* master; decode works. Reporter had a corrupted install. |
+| soundfile #459 | Gate 3 | Reporter never answered `bastibe`'s question. Unconfirmed + needs a 4GB file. |
+| alembic #1758/#1834, pypdf #3467/#3302, multipart #31, uvicorn #2722 | Gate 2 | All had open linked PRs. |
+
+**The pyjwt one is the lesson in one line: a maintainer's "pr welcome" is NOT
+verification.** Maintainers reply from a phone without opening the code. Gate 3
+is never optional, no matter who blessed the issue.
+
+### Bug quality bar (what "like aiokafka #1173" means)
+
+The shape worth chasing — all five, not three of five:
+1. **Real defect**, not a tuning/config/user-error issue
+2. **Cites specific code** with a permalink, and that code still exists today
+3. **Consequence is concrete** — data loss, silent corruption, security, crash
+4. **Unclaimed** — no linked PR, nobody delivered
+5. **Verifiable by you** — reproducible on macOS, or the logic is provable by reading
+
+Prefer bugs in libraries **your own projects actually import** (the
+`requirements.txt` list). joblib #1812 — the best merge to date — came from
+exactly there.
+
+---
+
 ## Summary Checklist — Do This Every Time Before Opening a PR
 
 ```
+[ ] Gate 1: repo safe (no CLAUDE.md/AGENTS.md, no assignment bot, active)
+[ ] Gate 2: UNCLAIMED (no linked open PR, no overlapping open PR, nobody delivered)
+[ ] Gate 3: verified a REAL bug against current master (not a tunable param, not user error)
+[ ] Gate 4: understood well enough to defend to a reviewer in own words
 [ ] Read CONTRIBUTING.md of the target repo
-[ ] Check .github/workflows/ for require_issue_link bot
 [ ] If bot exists → comment on issue first, wait for assignment
 [ ] If no bot → open PR directly, link the issue
 [ ] Branch name follows repo convention
 [ ] Commit message follows Conventional Commits
 [ ] PR description starts with "Closes #issue_number"
 [ ] Fix is small, focused, and unambiguous
-[ ] No code logic changes unless 100% sure (stick to docs/typos first)
+[ ] Zero AI signals in commit/PR/comments
 ```
 
 ---
 
 *Created: 2026-06-30 | Lesson learned on Day 1 — never skip the rules of a repo*
+*Updated: 2026-08-04 | Rule #8 — vet before deep-diving; 6 of 12 candidates died at Gate 2/3*
