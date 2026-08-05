@@ -121,6 +121,7 @@ Every active repo has a `good first issue` label. These are bugs the maintainer 
 | 43 | 2026-07-27 | [py-pdf/pypdf](https://github.com/py-pdf/pypdf) | **Bug fix** — 2/4-bit `/DeviceRGB` images forced to palette mode left an unrecognized Pillow mode and broke extraction (#3924); now unpacks interleaved colour components (`colors=`) and scales them to full range (`scale=`) | [#3929](https://github.com/py-pdf/pypdf/pull/3929) | ✅ **MERGED** |
 | 44 | 2026-08-04 | [py-pdf/pypdf](https://github.com/py-pdf/pypdf) | Review response — took maintainer's `int(mode[0])` suggestion, proved the new `bits2byte` params survive a general fix, then rebased off the `_handle_flate` reorder (#3904) to clear the merge conflict | [#3929](https://github.com/py-pdf/pypdf/pull/3929) | ✅ **MERGED** |
 | 45 | 2026-08-04 | [py-pdf/pypdf](https://github.com/py-pdf/pypdf) | **Bug fix** — follow-up to #3929: low-bit expansion only ran for FlateDecode, so unfiltered/inline images passed a raw `"4bits"` mode to Pillow and raised `unrecognized image mode`; extracted `_expand_low_bit_samples()` and applied it to all three raw-bytes paths | [#3938](https://github.com/py-pdf/pypdf/pull/3938) | ✅ **MERGED** |
+| 47 | 2026-08-05 | [run-llama/llama_index](https://github.com/run-llama/llama_index) | **Bug fix (51k★)** — `BaseComponent.__getstate__` deleted unpickleable attributes from the *live* object, not a copy: pydantic returns `self.__dict__` by reference, so pickling silently corrupted the source object (surfaces later in caching / deepcopy / multiprocessing paths). Shallow-copy before pruning; fixed the private-attr path too | [#22592](https://github.com/run-llama/llama_index/pull/22592) | ⏳ Open |
 | 46 | 2026-08-05 | [mpdavis/python-jose](https://github.com/mpdavis/python-jose) | **Security fix** — RSA1_5 JWE padding oracle (RFC 7516 §11.5): PKCS1v15's constant-time path returns wrong-length bytes for ~68% of malformed keys, bypassing random-CEK substitution and producing a distinguishable length error. Same class as Authlib CVE-2026-28490. 400 malformed tokens: 297/103 split → uniform | [#415](https://github.com/mpdavis/python-jose/pull/415) | ⏳ Open |
 
 ---
@@ -225,7 +226,7 @@ Your GitHub will say yes — with receipts.
 ## Current Stats
 
 - **Phase:** Phase 2 — Days 31–60
-- **Total PRs opened:** 47
+- **Total PRs opened:** 48
 - **Total PRs merged:** 7 — [joblib #1811](https://github.com/joblib/joblib/pull/1811) · [joblib #1812](https://github.com/joblib/joblib/pull/1812) · [sentence-transformers #3855](https://github.com/huggingface/sentence-transformers/pull/3855) · [sentence-transformers #3843](https://github.com/huggingface/sentence-transformers/pull/3843) · [nltk #3703](https://github.com/nltk/nltk/pull/3703) · [pypdf #3929](https://github.com/py-pdf/pypdf/pull/3929) · [pypdf #3938](https://github.com/py-pdf/pypdf/pull/3938) ← **2 real bug fixes in pypdf**
 - **PRs closed by bot:** 5 (LangChain — requires issue assignment)
 - **PRs closed by maintainer:** 8 (wandb · click · stanza ×4 · nltk · joblib #1814)
