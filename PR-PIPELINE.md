@@ -12,8 +12,8 @@ unclaimed today is not unclaimed next month.
 |---|---|---|---|
 | [aiokafka #1173](https://github.com/aio-libs/aiokafka/issues/1173) | 01:55 | `ods` | Direction: match Java (leave position) vs opt-in skip |
 | [python-jose #408](https://github.com/mpdavis/python-jose/issues/408) | 02:18 | `asherf` / `mpdavis` | Fix + test fully verified — PR ready on their word |
-| [authlib #740](https://github.com/lepture/authlib/issues/740) | 02:23 | `azmeuk` (he filed it) | Where the consent check belongs |
-| [authlib #627](https://github.com/lepture/authlib/issues/627) | 02:24 | `azmeuk` / `lepture` | Split description fix from deprecating the check? |
+| [authlib #740](https://github.com/authlib/authlib/issues/740) | 02:23 | `azmeuk` (he filed it) | Where the consent check belongs |
+| [authlib #627](https://github.com/authlib/authlib/issues/627) | 02:24 | `azmeuk` / `lepture` | ✅ description fix shipped as #919; check removal still open |
 
 **Do NOT post again on these until a maintainer replies** — chasing reads as
 pressure and is the pattern that got the stanza ban. Check for replies once a
@@ -90,6 +90,12 @@ flagged suspicious code, not a confirmed defect.
 
 **Do not PR without a real-world PDF that renders wrong.** Otherwise it is a
 no-op refactor of working code. Park until such a file turns up.
+
+**Also do not comment "fixed by #3938".** #3938 moved the low-bit expansion into
+`_expand_low_bit_samples()` and closed the *reported* crash, but #3367 is a
+different claim — that the Indexed branch overwrites `mode` — and that was never
+shown to fail. Saying it is fixed claims a defect that was never demonstrated.
+Leave the issue to `stefan6419846`.
 
 ---
 
@@ -185,7 +191,14 @@ coding (raise in `validate_request_prompt`, or a new hook).
 
 ## 5. authlib #627 — OAuth1 wrongly enforces TLS (copy-paste from OAuth2)
 
-**[lepture/authlib#627](https://github.com/lepture/authlib/issues/627)** · 5389★
+> **Canonical repo is `authlib/authlib`** — `lepture/authlib` is now a redirect.
+> Links built from the old slug 404. Fix any old references before using them.
+
+> **PART 1 SHIPPED 2026-08-10 → [PR #919](https://github.com/authlib/authlib/pull/919)**
+> (description string only, +1/−1). Part 2 — removing the transport check — is a
+> behaviour change and still needs `azmeuk`'s call. PR does not say `Closes #627`.
+
+**[authlib/authlib#627](https://github.com/authlib/authlib/issues/627)** · 5396★
 
 `OAuth1Request.__init__` calls `InsecureTransportError.check(uri)`, but OAuth 1.0
 is transport-independent — it signs requests rather than relying on TLS. The

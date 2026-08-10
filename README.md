@@ -226,11 +226,11 @@ Your GitHub will say yes — with receipts.
 ## Current Stats
 
 - **Phase:** Phase 2 — Days 31–60
-- **Total PRs opened:** 48
+- **Total PRs opened:** 49
 - **Total PRs merged:** 7 — [joblib #1811](https://github.com/joblib/joblib/pull/1811) · [joblib #1812](https://github.com/joblib/joblib/pull/1812) · [sentence-transformers #3855](https://github.com/huggingface/sentence-transformers/pull/3855) · [sentence-transformers #3843](https://github.com/huggingface/sentence-transformers/pull/3843) · [nltk #3703](https://github.com/nltk/nltk/pull/3703) · [pypdf #3929](https://github.com/py-pdf/pypdf/pull/3929) · [pypdf #3938](https://github.com/py-pdf/pypdf/pull/3938) ← **2 real bug fixes in pypdf**
 - **PRs closed by bot:** 5 (LangChain — requires issue assignment)
 - **PRs closed by maintainer:** 8 (wandb · click · stanza ×4 · nltk · joblib #1814)
-- **Active open PRs:** 26
+- **Active open PRs:** 27 — newest: [authlib #919](https://github.com/authlib/authlib/pull/919) (OAuth1 error names the wrong protocol)
 - **LangChain issues awaiting assignment:** 5
 - **LangGraph issues awaiting assignment:** 4
 
