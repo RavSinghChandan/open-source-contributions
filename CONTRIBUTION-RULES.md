@@ -209,6 +209,116 @@ exactly there.
 
 ---
 
+
+## Rule #9 — Write the Code the Reviewer Would Have Written
+
+> **Added 2026-08-16.** Every point below is something `stefan6419846` actually
+> raised on a pypdf PR. Five PRs, five merges — but two of them needed a
+> CHANGES_REQUESTED round that was avoidable. Check this list *before* pushing.
+
+### 9.1 — Use plain ASCII in comments and docstrings
+
+> *"Please use standard characters"* — #3943
+
+An em dash `—`, a curly quote `’`, an arrow `→` in source code will get flagged.
+Save them for the PR description. In code: `-`, `'`, `->`.
+
+```bash
+# before pushing, check every line you added:
+git diff -U0 | grep '^+' | grep -P '[^\x00-\x7F]'
+```
+
+### 9.2 — Don't over-comment. Delete anything the code already says.
+
+> *"Is this part of the comment really necessary?"* — #3960
+
+A comment earns its place only if it says something the code cannot:
+a threshold, a spec reference, a reason the obvious approach was rejected.
+"Set x to None" above `x = None` is noise. **One comment per non-obvious
+decision, zero otherwise.**
+
+### 9.3 — No reST markup in plain comments
+
+> *"Why do the docstrings need double backticks?"* — #3960
+
+` ``value`` ` is for **rendered** docstrings. A `#` comment is never rendered,
+so the backticks are just clutter. Match what the surrounding lines do.
+
+### 9.4 — Don't hardcode an assumption the spec doesn't guarantee
+
+> *"`[1 0]` indicates that the array always has two entries. This is wrong, as
+> we allow all even array lengths."* — #3943
+
+Before writing a fix, read what the format actually permits. If the spec says
+"even length", handle even length — not the two-element case you happened to
+test with.
+
+### 9.5 — Expect "why not the other branch too?"
+
+> *"Why can we always use the inverted order? Shouldn't we consider
+> `invert_color` as well?"* — #3943
+
+If your fix takes one path through a conditional, be ready to explain why the
+other path doesn't need it. Trace every case **before** the PR, and put the
+conclusion in the description. On #3943 the answer was "no path reaches this
+branch with the flag false" — that answer should have been in the PR body.
+
+### 9.6 — Don't assert values that can drift between library versions
+
+> *"Is the exact pixel value at (0, 0) deterministic across Pillow versions?
+> My preference would be to check the exact RGB value if possible, or at least
+> document them inside the test."* — #3943
+
+Decoder output can shift by a step between builds. Either pin the value **and
+say in a comment why it is stable**, or assert with a tolerance far smaller
+than the bug's effect. Never assert a number you cannot justify.
+
+### 9.7 — Take the suggestion
+
+> *"we could in theory do something like this: `bits = int(mode[0])`"* — #3929
+
+When a maintainer offers a simpler version and it is correct, take it. Don't
+defend your version because it is yours.
+
+### 9.8 — Ask before widening scope; keep one concern per PR
+
+> *"I guess we can make this two separate PRs if you are planning to work on
+> preparing the second PR after this."* — #3929
+
+When review reveals a second, larger problem: **reproduce it, say so, and ask**
+whether to widen this PR or open another. Never silently grow a PR the
+maintainer has already reviewed.
+
+### 9.9 — Rebase onto their structure, not yours
+
+> *"For this to get merged, please resolve the merge conflict."* — #3929
+
+Their merged change wins by default. Move your fix into its shape, then say
+in one comment: what you rebased onto, what conflicted, and any ordering
+constraint you had to preserve.
+
+### 9.10 — Match the file, not your preference
+
+Before writing: does this module use `assert x, "mypy"` or `cast()`? NumPy or
+Google docstrings? Tabs of context around a change? Copy what is already there.
+`_writer.py` uses `assert ..., "mypy"` — so a narrowing assert there should
+look identical.
+
+### Pre-push checklist (30 seconds, saves a review round)
+
+```
+[ ] No non-ASCII characters in added code
+[ ] Every added comment says something the code does not
+[ ] No ``backticks`` in plain # comments
+[ ] Handled the general case the spec allows, not just my test case
+[ ] Can explain why untouched branches need no change, and it is in the PR body
+[ ] Test values are either justified in a comment or asserted with tolerance
+[ ] Style matches the surrounding file
+[ ] Ran the repo's own checks (scripts/check, make lint, ruff, mypy) not just pytest
+```
+
+---
+
 ## Summary Checklist — Do This Every Time Before Opening a PR
 
 ```
@@ -230,3 +340,4 @@ exactly there.
 
 *Created: 2026-06-30 | Lesson learned on Day 1 — never skip the rules of a repo*
 *Updated: 2026-08-04 | Rule #8 — vet before deep-diving; 6 of 12 candidates died at Gate 2/3*
+*Updated: 2026-08-16 | Rule #9 — review lessons from 5 merged pypdf PRs; write the code the reviewer would have written*
