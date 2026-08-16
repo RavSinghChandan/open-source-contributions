@@ -304,6 +304,33 @@ Google docstrings? Tabs of context around a change? Copy what is already there.
 `_writer.py` uses `assert ..., "mypy"` — so a narrowing assert there should
 look identical.
 
+### 9.11 — Look for the existing test file before creating one
+
+> *"This is wrong. Please move the tests to the existing file
+> `tests/scripts/test_make_release.py`"* — #3969
+
+I wrote in the PR body that `make_release.py` "had none", created
+`tests/test_make_release.py` at the top level, and was wrong on both counts.
+The real file sat in `tests/scripts/` with 10 tests, fixture data in
+`tests/scripts/data/`, and its own import convention
+(`pytest.importorskip("make_release")` inside each test, not a module-level
+import).
+
+A `ls tests/` is not enough — tests are often in a subdirectory that mirrors
+the thing under test. Search by name before writing anything:
+
+```bash
+# is there already a test for this module?
+find tests -name "*<module>*"
+grep -rl "<function_you_are_testing>" tests/
+```
+
+Then read it: match its imports, its parametrize style, its naming. Adding a
+second file for the same module is a guaranteed review round.
+
+**And never claim "there were no tests" in a PR body without running that
+search.** It is the kind of statement a maintainer checks in ten seconds.
+
 ### Pre-push checklist (30 seconds, saves a review round)
 
 ```
@@ -313,6 +340,7 @@ look identical.
 [ ] Handled the general case the spec allows, not just my test case
 [ ] Can explain why untouched branches need no change, and it is in the PR body
 [ ] Test values are either justified in a comment or asserted with tolerance
+[ ] Searched tests/ for an existing test file before creating one
 [ ] Style matches the surrounding file
 [ ] Ran the repo's own checks (scripts/check, make lint, ruff, mypy) not just pytest
 ```
@@ -341,3 +369,4 @@ look identical.
 *Created: 2026-06-30 | Lesson learned on Day 1 — never skip the rules of a repo*
 *Updated: 2026-08-04 | Rule #8 — vet before deep-diving; 6 of 12 candidates died at Gate 2/3*
 *Updated: 2026-08-16 | Rule #9 — review lessons from 5 merged pypdf PRs; write the code the reviewer would have written*
+*Updated: 2026-08-16 | Rule #9.11 — search for the existing test file first; stefan caught a duplicate on #3969*
