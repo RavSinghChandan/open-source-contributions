@@ -366,7 +366,104 @@ search.** It is the kind of statement a maintainer checks in ten seconds.
 
 ---
 
+---
+
+## Rule #10 — The Reviewer's Pattern: Say Less, Prove More
+
+> **Added 2026-08-21.** Derived from every comment `stefan6419846` has left across
+> 17 pypdf PRs. Nine of them were the *same three requests* in different clothes.
+> Applying these before pushing is the difference between a clean merge and a
+> CHANGES_REQUESTED round.
+
+### 10.1 — Use the narrowest type that is actually true
+
+His most repeated question, in three separate forms:
+
+- *"Out of curiosity: Why the broad `str` and not a `Literal`?"* — #3970
+- *"If I understand it correctly, the string could be a `Literal`?"* — #3989
+- *"Isn't a `TreeObject` a `DictionaryObject`, thus we could drop the `TreeObject`?"* — #3988
+
+Two failure modes, opposite directions:
+- **Too broad**: `str` where only two values ever occur -> use `Literal["a", "b"]`.
+- **Redundant union**: `Union[Sub, Base]` where `Sub` subclasses `Base` -> just `Base`.
+
+Before annotating anything, ask: what is the *smallest* set this can hold, and
+is any member already covered by another?
+
+```bash
+# is the union redundant?
+python3 -c "from pypdf.generic import A, B; print(issubclass(A, B))"
+# what values does this key actually take? instrument and run the suite.
+```
+
+### 10.2 — A test that only exercises the type checker does not belong
+
+- *"Do we really need a test for this?"* — #3971
+- *"Additionally, having typing tested in this manner might not be required at all."* — #3972
+
+For a pure annotation change, the typeguard run **is** the evidence. An
+`isinstance` assertion in the test suite tests mypy, not the library. Ship the
+annotation alone and put the before/after failure counts in the PR body.
+
+Add a test only when runtime behaviour changes.
+
+### 10.3 — Never construct what the repo already has
+
+- *"I am not sure whether we need to build the PDF file explicitly and do not have
+  a basic file in the `resources` or `sample-files` directory."* — #3972
+- *"Why cannot we patch the `decode` method and use the regular mocking, instead of
+  using a custom class?"* — #3971
+- *"Please move the tests to the existing file"* — #3969
+
+Search first, in this order: existing test file -> `resources/` -> `sample-files/`
+-> standard `unittest.mock`. Hand-built fixtures and bespoke helper classes are a
+last resort, and he will ask why.
+
+```bash
+ls resources/ | grep -i <feature>
+grep -rn "<function_under_test>" tests/ | head
+```
+
+### 10.4 — Comments are guilty until proven necessary
+
+- *"Is this part of the comment really necessary?"* — #3960
+- *"Are the new comments really necessary?"* — #3971
+- *"Why do the docstrings need double backticks?"* — #3960
+
+Default to zero comments. One earns its place only for a spec reference, a
+threshold, or a rejected alternative. Never restate the code.
+
+### 10.5 — Trace every branch before he asks about the one you skipped
+
+- *"Why can we always use the inverted order? Shouldn't we consider `invert_color`?"* — #3943
+- *"If `len(decode)` has not an even number of entries, is this an input issue...?"* — #3943
+- *"`[1 0]` indicates that the array always has two entries. This is wrong."* — #3943
+
+Handle what the **spec** permits, not what your test file happened to contain.
+If the fix takes one path through a conditional, put the reason the other path
+is fine in the PR body before he has to ask.
+
+### 10.6 — Ask before widening; he will tell you which he prefers
+
+- *"How would this affect the new parameters you introduced? Would a general fix revert these?"* — #3929
+
+When a related problem surfaces mid-PR, name it in the body and offer to handle
+it separately. Do not silently expand the diff.
+
+### Pre-push checklist (Rule #10)
+
+```
+[ ] Every new annotation is the narrowest true type (Literal? redundant union?)
+[ ] No test added for a pure annotation change
+[ ] No hand-built fixture where resources/ or unittest.mock would do
+[ ] Zero new comments, unless one states a spec reference or a threshold
+[ ] Every untaken branch explained in the PR body
+[ ] Scope is one thing; anything adjacent is offered, not included
+```
+
+
 *Created: 2026-06-30 | Lesson learned on Day 1 — never skip the rules of a repo*
 *Updated: 2026-08-04 | Rule #8 — vet before deep-diving; 6 of 12 candidates died at Gate 2/3*
 *Updated: 2026-08-16 | Rule #9 — review lessons from 5 merged pypdf PRs; write the code the reviewer would have written*
 *Updated: 2026-08-16 | Rule #9.11 — search for the existing test file first; stefan caught a duplicate on #3969*
+*Updated: 2026-08-21 | Rule #10 — the reviewer's pattern across 17 pypdf PRs; narrowest type, no typing tests, reuse fixtures*
