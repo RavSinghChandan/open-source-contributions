@@ -147,6 +147,13 @@ gh api repos/OWNER/REPO --jq '"\(.stargazers_count)★ push=\(.pushed_at[0:10])"
 CLAUDE.md / AGENTS.md → abort. Assignment bot → issue-comment flow first.
 Last push older than ~3 months → the PR will rot; deprioritise.
 
+**Also read the AI policy here, before writing any code** (see Rule #11):
+```bash
+gh api repos/OWNER/REPO/contents/CONTRIBUTING.md --jq '.content' | base64 -d \
+  | grep -i -A20 "AI policy\|artificial intelligence\|\bLLM\b\|AI-generated"
+```
+A policy found after the PR is open is a policy already broken.
+
 **Gate 2 — Is it UNCLAIMED?** (the gate that matters most — run before reading the issue body)
 ```bash
 # linked PRs — the single best claim signal
@@ -462,8 +469,177 @@ it separately. Do not silently expand the diff.
 ```
 
 
+---
+
+## Rule #11 — Read the AI Policy Before the First PR, and Disclose
+
+> **Added 2026-08-27.** After 31 merged pypdf PRs, `stefan6419846` asked directly
+> whether the AI usage guidelines had been followed. They had not been read. This
+> is the most expensive lesson in this file, because it puts a real reputation at
+> risk rather than costing an afternoon.
+
+### What happened
+
+Eight PRs were open at once. The maintainer wrote:
+
+> *"Given the relatively large number of previously unreported issues and multiple
+> PRs appearing in close succession, please make sure to follow our contribution
+> guidelines regarding AI usage."*
+
+pypdf's `CONTRIBUTING.md` has an **AI Policy** section that says, in short:
+
+1. AI assistance for coding **is allowed**.
+2. **"Clearly indicate in your pull request when you used AI and include the
+   corresponding tool and model."**
+3. **"AI should not be used to generate comments when communicating with
+   maintainers. We expect comments on our projects to be written by humans."**
+4. **"Do not copy responses from the AI when replying to questions from
+   maintainers."**
+5. You must be able to **explain the change in your own words**.
+
+Points 2, 3 and 4 had been broken on every PR: the bodies and the replies to
+review comments were AI-written and pasted verbatim, and no disclosure was made.
+
+### 11.1 — Grep for the policy during Gate 1, not later
+
+Add this to the Gate 1 check in Rule #8. It costs ten seconds:
+
+```bash
+gh api repos/OWNER/REPO/contents/CONTRIBUTING.md --jq '.content' | base64 -d \
+  | grep -i -A20 "AI policy\|artificial intelligence\|\bLLM\b\|AI-generated"
+```
+
+Also check `.github/CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` and any
+`AI_POLICY.md`. A repo without an explicit policy still deserves disclosure.
+
+### 11.2 — The split that keeps you honest
+
+| AI may do | You must do |
+|---|---|
+| Find the defect | Understand why it is a defect |
+| Write the patch | Read the patch and be able to defend it |
+| Run gates, tests, mutation tests | Decide whether it is worth opening |
+| Draft a technical summary **for you to rewrite** | Write the PR body in your own words |
+| — | **Write every reply to a maintainer yourself** |
+
+The line is: **AI writes code, the human writes to humans.** A maintainer's
+question is a conversation with a person. Answering it with pasted text is how
+trust is lost, and it is what most policies specifically forbid.
+
+### 11.3 — Disclose in the PR body
+
+One line, at the bottom, naming the tool and model. For example:
+
+```
+Used Claude (Opus) to help locate and patch this; I reviewed and tested the change.
+```
+
+This is not an admission of weakness. Policies that ask for it are asking for
+honesty, not abstinence — pypdf's own wording is *"You may ask AI for (coding)
+assistance."*
+
+### 11.4 — Volume is a signal, and reviewers read it
+
+The same message said:
+
+> *"we should avoid having a large number of such similar PRs being worked on in
+> parallel... a significant amount of my time is currently going into reviewing
+> them, which makes it harder for me to look into other reported issues and
+> important blockers."*
+>
+> *"I would prefer not to introduce a strict limit on the number of parallel PRs
+> per contributor, thus I appreciate your help in keeping this manageable."*
+
+A maintainer is a volunteer with finite attention. Eight near-identical PRs from
+one contributor is not eight times the contribution — it is a queue that crowds
+out their own priorities, and it reads as automation rather than engagement.
+
+**Cap: one or two open PRs per repo.** Open the next only after the previous
+merges. If a seam yields ten bugs, that is ten weeks of contribution, not one
+afternoon. A batch of similar fixes is better as **one PR touching several call
+sites** than as several PRs each touching one.
+
+### 11.5 — Speed is what made him ask
+
+Nothing in the code was wrong. What triggered the question was the *shape* of the
+activity: many previously unreported issues, found quickly, filed in close
+succession, each with a polished body. That pattern is indistinguishable from an
+unattended bot, whatever the truth is.
+
+Slowing down is not just courtesy. It is what makes the contribution legible as
+human work.
+
+### 11.6 — The technical notes from that same round
+
+Worth keeping even though those PRs were closed, because each is a habit:
+
+**Give parametrised tests real IDs.** Raised on six PRs in one sitting:
+
+> *"Please provide meaningful IDs as well."* / *"Please provide useful IDs."* /
+> *"Please provide meaningful IDs over the auto-generated IDs."*
+
+```python
+# not this - pytest generates ids like [1-Destination tree is not a dictionary: 1]
+@pytest.mark.parametrize(("value", "expected"), [(NumberObject(1), "..."), ...])
+
+# this
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        pytest.param(NumberObject(1), "...", id="number"),
+        pytest.param(ArrayObject(), "...", id="array"),
+    ],
+)
+```
+
+**Do not name a test after your own change.** On a test called
+`..._valid_entries_are_unaffected`:
+
+> *"Why 'unaffected'? This only holds true for your change, not for the general
+> tests."*
+
+The test name should describe the behaviour, not its relationship to your diff.
+Six months later nobody knows what "unaffected" referred to.
+
+**Hoist a repeated length out of a loop or condition.**
+
+> *"For a large amount of kids, this can be costly. Please consider using a
+> dedicated variable for the length."*
+
+**Fix the type, not the call site.** On a `Literal` alias added to work around a
+class used as a type:
+
+> *"I think this is the wrong approach. Instead, we should probably make
+> `PageLabelStyle` a proper `StrEnum`."*
+
+When an annotation is wrong because the underlying construct is wrong, fix the
+construct. Rule 10.1 says use the narrowest true type; this extends it — if no
+true type exists yet, create it properly rather than papering over it.
+
+**Say whether a guard changes behaviour.**
+
+> *"Isn't this a behavioral change, or are all `null_or_none` cases still handled
+> correctly?"*
+
+Any `isinstance` guard added to a path that previously fell through needs the
+untouched cases traced and stated in the PR body, before he has to ask.
+
+### Pre-push checklist (Rule #11)
+
+```
+[ ] CONTRIBUTING.md read in full, AI policy section grepped for explicitly
+[ ] Disclosure line in the PR body naming the tool and model
+[ ] PR body written in my own words, not pasted
+[ ] I can explain this change without re-reading the diff
+[ ] At most 1-2 PRs open in this repo
+[ ] Related fixes grouped into one PR rather than split across many
+[ ] Every maintainer reply written by me, personally
+```
+
+
 *Created: 2026-06-30 | Lesson learned on Day 1 — never skip the rules of a repo*
 *Updated: 2026-08-04 | Rule #8 — vet before deep-diving; 6 of 12 candidates died at Gate 2/3*
 *Updated: 2026-08-16 | Rule #9 — review lessons from 5 merged pypdf PRs; write the code the reviewer would have written*
 *Updated: 2026-08-16 | Rule #9.11 — search for the existing test file first; stefan caught a duplicate on #3969*
 *Updated: 2026-08-21 | Rule #10 — the reviewer's pattern across 17 pypdf PRs; narrowest type, no typing tests, reuse fixtures*
+*Updated: 2026-08-27 | Rule #11 — read the AI policy first, disclose the tool, cap open PRs, and write to maintainers yourself*
