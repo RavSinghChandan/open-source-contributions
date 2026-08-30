@@ -6,6 +6,28 @@
 
 ---
 
+## STOP — do this before writing any code
+
+**Re-read this file before starting a new PR.** Not from memory. Open it.
+
+Every rule below was added because a maintainer had to raise the same point twice. The
+cost of skipping the re-read is a review round, and review rounds are the maintainer's
+time, not ours.
+
+The pre-PR checklist lives at the end of **Rule #12**. Work through it literally.
+
+| If you are about to... | Read first |
+|---|---|
+| Pick a repo or an issue | Rule #8 — the four gates |
+| Write the first line of code | Rule #11.1 — grep their AI policy |
+| Add a type annotation | Rule #10.1, Rule #12.1 |
+| Add a test | Rule #9.11, Rule #12.2 |
+| Guard a reader path | Rule #12.3, Rule #12.4 |
+| Write the PR body | Rule #11.2, Rule #11.3 |
+| Reply to a maintainer | Rule #11.2 — you write it, not the AI |
+
+---
+
 ## Rule #1 — Before Touching Any Repo, Read Their Rules First
 
 Every big open source repo has its own contribution process. Before writing a single line of code:
@@ -637,9 +659,103 @@ untouched cases traced and stated in the PR body, before he has to ask.
 ```
 
 
+---
+
+## Rule #12 — Three Recurring Corrections, and the Check That Prevents Them
+
+> **Added 2026-08-30.** Every one of these was raised by `stefan6419846` more than once.
+> Each is cheap to avoid and costs a review round when missed.
+
+### 12.1 — Never leave a bare `# type: ignore`
+
+> *"While we are at it: Could we please tighten the ignore to the specific error codes?"* — #4030
+
+A bare ignore hides every present and future error on that line. Find the actual code
+and name it:
+
+```bash
+# delete the ignore, run mypy, read the code in brackets
+python3 -m mypy pypdf 2>&1 | grep "the_file.py:LINE"
+# -> error: Value of type "PdfObject" is not indexable  [index]
+# then write: # type: ignore[index]
+```
+
+This applies to an ignore you are **touching**, not only one you are adding. If your diff
+sits on a line with a bare ignore, tighten it while you are there.
+
+### 12.2 — Search before adding a happy-path test
+
+> *"Don't we already have a proper test for this?"* — #4031
+
+A "does the normal case still work" test is almost always already present in a mature
+suite. Before adding one:
+
+```bash
+grep -rc "function_under_test" tests/*.py | grep -v ":0"
+```
+
+42 tests already called `get_fields`. The added test proved nothing and had to be removed.
+This extends Rule 9.11: search for the existing **test**, not just the existing test file.
+
+### 12.3 — Run the full suite, including the network-marked tests
+
+> *"Please check the test failure (`test_workflows.py::test_get_fields_warns`)."* — #4029
+
+Running only `-m "not enable_socket"` hides the tests that use the project's real-world
+corpus. Those files contain damage that cannot be produced with a normal writer &mdash; in
+this case an `/AcroForm` key present with a `None` value, which broke a guard tested only
+against numbers, strings and arrays.
+
+```bash
+# before pushing a guard on any reader path
+python3 -m pytest tests/ -q            # everything, sockets included
+```
+
+If the network suite cannot run locally, say so in the PR rather than letting CI find it.
+
+### 12.4 — `None` is not a wrong type
+
+A guard written as "if it is not a dictionary, warn" will fire on `None`, which in PDF
+terms usually means *absent*, not *malformed*. The two need different handling:
+
+```python
+entry = catalog[KEY]
+value = None if entry is None else entry.get_object()
+if value is not None and not isinstance(value, DictionaryObject):
+    logger_warning(...)   # wrong type - report it
+    return None
+# None falls through to the existing absent-key path
+```
+
+The old `cast(...)` did nothing at runtime, so `None` reached the existing null check
+untouched. Replacing a cast with a real call changes that, and the null path has to be
+carried across deliberately.
+
+### Mandatory pre-PR check
+
+**Before writing any new PR, re-read this file.** Not the summary &mdash; the checklists.
+The specific rules that have cost a review round are 9.11, 10.1, 10.2, 11.3, 12.1, 12.2
+and 12.3.
+
+```
+[ ] Rules file re-read for this repo before starting
+[ ] Gate 1-4 applied (Rule #8), AI policy grepped (Rule #11.1)
+[ ] Full test suite run, sockets included (12.3)
+[ ] No bare type: ignore on any line my diff touches (12.1)
+[ ] grep -rc for an existing test before adding a happy-path one (12.2)
+[ ] None handled separately from wrong-type (12.4)
+[ ] Mutation test: revert the fix, confirm the new tests fail
+[ ] Meaningful pytest.param ids (11.6)
+[ ] Test names describe behaviour, not my diff (11.6)
+[ ] Disclosure line naming tool and model (11.3)
+[ ] At most 1-2 PRs open in this repo (11.4)
+```
+
+
 *Created: 2026-06-30 | Lesson learned on Day 1 — never skip the rules of a repo*
 *Updated: 2026-08-04 | Rule #8 — vet before deep-diving; 6 of 12 candidates died at Gate 2/3*
 *Updated: 2026-08-16 | Rule #9 — review lessons from 5 merged pypdf PRs; write the code the reviewer would have written*
 *Updated: 2026-08-16 | Rule #9.11 — search for the existing test file first; stefan caught a duplicate on #3969*
 *Updated: 2026-08-21 | Rule #10 — the reviewer's pattern across 17 pypdf PRs; narrowest type, no typing tests, reuse fixtures*
 *Updated: 2026-08-27 | Rule #11 — read the AI policy first, disclose the tool, cap open PRs, and write to maintainers yourself*
+*Updated: 2026-08-30 | Rule #12 — tighten type ignores, search before adding tests, run the socket suite, treat None as absent; mandatory pre-PR re-read*
