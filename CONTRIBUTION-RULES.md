@@ -24,6 +24,8 @@ The pre-PR checklist lives at the end of **Rule #12**. Work through it literally
 | Add a test | Rule #9.11, Rule #12.2 |
 | Guard a reader path | Rule #12.3, Rule #12.4 |
 | Write the PR body | Rule #11.2, Rule #11.3 |
+| Open **any** PR | Rule #13.2, Rule #13.5 &mdash; read their last 20 comments, grep your diff |
+| Answer "isn't this wrong?" | Rule #13.4 &mdash; revert and run it before conceding |
 | Reply to a maintainer | Rule #11.2 — you write it, not the AI |
 
 ---
@@ -759,3 +761,68 @@ and 12.3.
 *Updated: 2026-08-21 | Rule #10 — the reviewer's pattern across 17 pypdf PRs; narrowest type, no typing tests, reuse fixtures*
 *Updated: 2026-08-27 | Rule #11 — read the AI policy first, disclose the tool, cap open PRs, and write to maintainers yourself*
 *Updated: 2026-08-30 | Rule #12 — tighten type ignores, search before adding tests, run the socket suite, treat None as absent; mandatory pre-PR re-read*
+
+## Rule #13: Stop guessing what the reviewer wants. Count it.
+
+Twenty-six PRs into pypdf, every single one drew at least one review round.
+The reaction was to treat each comment as a fresh mistake and write a new rule.
+That was wrong twice over.
+
+**13.1 Measure before concluding.** Other contributors get merged with no
+comments at all - roughly six out of ten. So the round-trips are not simply
+"how this maintainer works", and they are not thirty-seven separate blunders
+either. Both stories were comfortable and both were wrong. Pull the numbers:
+
+```bash
+# my review load
+for n in $(gh pr list --repo <repo> --author <me> --state all --limit 60 \
+           --json number --jq '.[].number'); do
+  echo "#$n $(gh api repos/<repo>/pulls/$n/comments \
+        --jq '[.[]|select(.user.login=="<maintainer>")]|length')"
+done
+# their review load, for comparison
+gh pr list --repo <repo> --state merged --limit 40 --json number,author
+```
+
+**13.2 The same three asks account for most of it.** Not novel bugs - taste,
+repeated:
+
+| Ask | Times | Where |
+|---|---|---|
+| Unnecessary comments | 3 | #3960, #3971 x2 |
+| Meaningful test IDs | 2 | #4020, #4023 |
+| No abbreviated imports/aliases | 2 | #4003, #4014 |
+
+Read the maintainer's own last twenty comments before opening a PR. The next
+comment is probably one they have already made.
+
+**13.3 A comment explaining the fix is still an unnecessary comment.** While
+answering "isn't this wrong?" on #4030 a four-line comment went into the source
+justifying the guard. That is the exact thing objected to three times. The
+reasoning belongs in the PR description, where it answers the question without
+living in the codebase forever.
+
+**13.4 "Isn't this wrong?" is a question, not a verdict.** On #4030 it looked
+like the guard was dead code - the line above appeared to prove the object was
+already a dictionary. It did not: it proved `/Resources` was a dictionary,
+while the guard checks the `/XObject` value inside it. Different objects.
+Revert the fix and run it before conceding:
+
+```
+guard removed -> TypeError: 'NumberObject' object is not iterable
+```
+
+Answer with the mutation result. Conceding to a question that had a defensible
+answer wastes a round just as surely as being wrong does.
+
+**13.5 Check the diff against their past asks before pushing.** Mechanical:
+
+```bash
+git diff upstream/main..HEAD -- tests/ | grep -A6 parametrize   # every param needs id=
+git diff upstream/main..HEAD | grep "^+" | grep -E "^\+\s*#"  # justify each new comment
+grep -rc "<function>" tests/*.py | grep -v ":0"                 # happy path already covered?
+```
+
+This caught a redundant `get_fields` happy-path test on the acroform branch -
+the identical thing rejected on #4031 - before it was pushed.
+
