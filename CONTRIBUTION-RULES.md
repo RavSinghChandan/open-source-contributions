@@ -24,7 +24,9 @@ The pre-PR checklist lives at the end of **Rule #12**. Work through it literally
 | Add a test | Rule #9.11, Rule #12.2 |
 | Guard a reader path | Rule #12.3, Rule #12.4 |
 | Write the PR body | Rule #11.2, Rule #11.3 |
+| Add a branch / `if` to source | Rule #14 &mdash; cover every exit, measure it, don't eyeball |
 | Open **any** PR | Rule #13.2, Rule #13.5 &mdash; read their last 20 comments, grep your diff |
+| Say a PR is "ready" | Rule #14.4 &mdash; read Codecov's comment first |
 | Answer "isn't this wrong?" | Rule #13.4 &mdash; revert and run it before conceding |
 | Reply to a maintainer | Rule #11.2 — you write it, not the AI |
 
@@ -578,8 +580,18 @@ A maintainer is a volunteer with finite attention. Eight near-identical PRs from
 one contributor is not eight times the contribution — it is a queue that crowds
 out their own priorities, and it reads as automation rather than engagement.
 
-**Cap: one or two open PRs per repo.** Open the next only after the previous
-merges. If a seam yields ten bugs, that is ten weeks of contribution, not one
+**Cap: one or two open PRs per repo. NON-NEGOTIABLE for py-pdf/pypdf.**
+
+> **Reverted 2026-09-02 after this rule was broken.** On 2026-09-01 this cap was
+> raised to five on the strength of "I talked to Stefan and he agreed". No such
+> agreement existed in writing anywhere. Five PRs went out (#4039-#4043); Stefan
+> replied on #4042 pointing straight back at the promise Chandan made himself in
+> #4018 (comment 5433803551): *"I'll limit my contributions to 1-2 PRs at a time."*
+>
+> **A documented promise to a maintainer is never relaxed on verbal say-so.** If
+> the user says an agreement changed, ASK FOR THE LINK to where the maintainer said
+> so, and paste it here. No link, no change. This cost real credibility.
+Elsewhere: open the next only after the previous merges. If a seam yields ten bugs, that is ten weeks of contribution, not one
 afternoon. A batch of similar fixes is better as **one PR touching several call
 sites** than as several PRs each touching one.
 
@@ -826,3 +838,85 @@ grep -rc "<function>" tests/*.py | grep -v ":0"                 # happy path alr
 This caught a redundant `get_fields` happy-path test on the acroform branch -
 the identical thing rejected on #4031 - before it was pushed.
 
+
+---
+
+## Rule #14: Cover every branch you write, before you push
+
+**The miss (#4054, 2026-09-07).** The fix added a helper with three exits:
+
+```python
+def _get_page_resources(obj: Any) -> DictionaryObject:
+    resources = obj.get_inherited(key=PG.RESOURCES, default=DictionaryObject())
+    if is_null_or_none(resources):
+        return DictionaryObject()          # <- never tested
+    if not isinstance(resources, DictionaryObject):
+        logger_warning(...)
+        return DictionaryObject()          # <- tested, 3 parametrized cases
+    return resources                       # <- never tested
+```
+
+Three tests went in, all for the middle branch. Codecov reported 80% patch
+coverage and project coverage *dropping* 0.02%. Stefan requested changes with
+one line: "The coverage is incomplete (`is_null_or_none` not covered)."
+
+Cost: a full review round, on a PR that was otherwise finished, for something
+measurable in fifteen seconds before pushing.
+
+**14.1 Every new branch needs a test, including the pass-through.** The habit is
+to test the bug being fixed. The uncovered lines are always the *other* exits —
+the early return for the absent case, and the normal path where nothing is
+wrong. Both count in the patch percentage, and a reviewer reading a coverage
+report sees them before reading the code.
+
+**14.2 Measure the diff, do not eyeball it.** Run this before every push that
+touches source:
+
+```bash
+# Which lines of MY diff are untested?
+python -m pytest tests/test_<file>.py -q \
+  --cov=<package>.<module> --cov-report=term-missing --no-header \
+  | grep -E "<module>|TOTAL"
+```
+
+If the local coverage plugin conflicts with the repo's config (pypdf pins
+options an older `coverage` rejects), drive it directly and print only the
+function under test:
+
+```python
+import coverage, inspect
+cov = coverage.Coverage(branch=True); cov.start()
+# ... exercise the code under test ...
+cov.stop()
+import <package>.<module> as M
+missing = set(cov.analysis2(M.__file__)[3])
+src, start = inspect.getsourcelines(M.<new_function>)
+for i, line in enumerate(src, start=start):
+    print(("MISS" if i in missing else "  ok"), i, line.rstrip())
+```
+
+Every line must read `ok` before the branch is pushed. This is the exact script
+that would have caught #4054, and it takes about fifteen seconds.
+
+**14.3 A branch that cannot be reached is a branch that should not exist.** While
+covering #4054 a test was written for `/Resources = None`. It failed:
+`ValueError: Value must be a PdfObject` — `DictionaryObject` refuses to store a
+bare `None`, so no real document can produce that input. Do not reach for a mock
+to force it. Either delete the unreachable guard, or say plainly in the PR why
+the input cannot occur. A mock that manufactures an impossible object proves
+nothing and invites "when does this actually happen?".
+
+**14.4 Read the bot before the human does.** Codecov posts patch coverage within
+about two minutes of the push. Read that comment before reporting the PR as
+ready. A maintainer who has to tell you what a bot already said has spent their
+round on something automated.
+
+### Pre-push gate — source changes
+
+```
+[ ] Every new function's branches individually exercised (14.2 script, all "ok")
+[ ] The absent/null case tested, not just the malformed one
+[ ] The normal pass-through case tested
+[ ] Any unreachable branch either deleted or explained in the PR body
+[ ] Codecov patch % read and green BEFORE saying the PR is ready
+```
