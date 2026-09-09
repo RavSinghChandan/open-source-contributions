@@ -78,6 +78,11 @@ If a test asserts the current behaviour, the "bug" is a deliberate design choice
   0.02%, and his whole review was one line: "The coverage is incomplete
   (`is_null_or_none` not covered)." He reads the coverage bot before the diff.
   Measure your own patch coverage before pushing — Rule #14.2.
+- **#4058 — a new test helper ignored the repo's own naming convention.** It went
+  in as `_font_with_differences`; the repo already had `_generate_flate_pdf` and
+  `_generate_dag_with_forms`. His whole review was a one-line `suggestion` block
+  with the corrected name. Grep the two nearest existing examples before naming
+  anything new — Rule #15. And when he sends a suggestion, apply it verbatim.
 
 ## The shape that merged clean, first try, zero comments
 

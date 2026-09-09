@@ -25,6 +25,8 @@ The pre-PR checklist lives at the end of **Rule #12**. Work through it literally
 | Guard a reader path | Rule #12.3, Rule #12.4 |
 | Write the PR body | Rule #11.2, Rule #11.3 |
 | Add a branch / `if` to source | Rule #14 &mdash; cover every exit, measure it, don't eyeball |
+| Name a helper, fixture or file | Rule #15 &mdash; grep the two nearest examples and match them |
+| Receive a `suggestion` block | Rule #15.3 &mdash; apply it verbatim, do not argue |
 | Open **any** PR | Rule #13.2, Rule #13.5 &mdash; read their last 20 comments, grep your diff |
 | Say a PR is "ready" | Rule #14.4 &mdash; read Codecov's comment first |
 | Answer "isn't this wrong?" | Rule #13.4 &mdash; revert and run it before conceding |
@@ -919,4 +921,68 @@ round on something automated.
 [ ] The normal pass-through case tested
 [ ] Any unreachable branch either deleted or explained in the PR body
 [ ] Codecov patch % read and green BEFORE saying the PR is ready
+```
+
+---
+
+## Rule #15: Name new things the way the repo already names them
+
+**The miss (#4058, 2026-09-08).** A new test helper went in as
+`_font_with_differences`. Stefan's entire review was a one-line suggestion:
+
+```suggestion
+def _generate_font_with_differences(differences: PdfObject) -> DictionaryObject:
+```
+
+The repo already had the convention, and a single grep would have found it:
+
+```bash
+$ grep -rn "^def _generate" tests/*.py
+tests/test_filters.py:1208:def _generate_flate_pdf(...)
+tests/test_text_extraction.py:814:def _generate_dag_with_forms(...)
+```
+
+Helpers that **build** a fixture are named `_generate_*`. Mine built a font
+dictionary and was named for what it returned rather than what it did.
+
+Cost: a full review round, `CHANGES_REQUESTED`, on a PR whose logic he had no
+objection to.
+
+**15.1 This is the same failure as Rule #14, in a different place.** Both are
+"I added something new without checking how this repo already does it." The
+coverage miss was not measuring; this was not grepping. The general rule:
+
+> Before introducing any new name, file, fixture or pattern, find the two
+> nearest existing examples and match them.
+
+**15.2 The grep, before writing the helper:**
+
+```bash
+# What do helpers that build fixtures look like here?
+grep -rhoE "^def _[a-z_]+\(" tests/*.py | sort | uniq -c | sort -rn | head -20
+
+# Is there a verb convention? (_generate_, _make_, _build_, _get_)
+grep -rn "^def _\(generate\|make\|build\|create\|get\)_" tests/*.py | head
+```
+
+If two or more existing helpers share a prefix, use it. If the file has exactly
+one convention, that IS the convention — do not invent a second.
+
+**15.3 A `suggestion` block is not a discussion.** When a maintainer sends a
+GitHub suggestion, the correct response is to apply it verbatim and push. It is
+the cheapest possible review comment to resolve; arguing costs more than the
+rename saves. Apply it, confirm the tests still pass, say thank you in one line.
+
+**15.4 Renaming is not free — check the line length afterwards.** The rename took
+one call site from 88 to 100 characters. pypdf allows 120, so it passed, but a
+repo at 79 or 88 would have turned a one-word fix into a style failure and a
+second round. Run the linter after any rename, never before only.
+
+### Pre-push gate — anything newly named
+
+```
+[ ] Grepped for the two nearest existing examples and matched their convention
+[ ] Verb prefix matches the file's dominant pattern (_generate_ / _make_ / ...)
+[ ] Linter run AFTER the rename, not just before
+[ ] Any maintainer `suggestion` block applied verbatim, not paraphrased
 ```
