@@ -78,6 +78,11 @@ If a test asserts the current behaviour, the "bug" is a deliberate design choice
   0.02%, and his whole review was one line: "The coverage is incomplete
   (`is_null_or_none` not covered)." He reads the coverage bot before the diff.
   Measure your own patch coverage before pushing — Rule #14.2.
+- **#4080 — a test docstring that narrates the old bug is obsolete on merge.** Mine
+  said the code "raised UnboundLocalError"; once the fix lands that is no longer
+  true. His whole review: "This comment seems to be obsolete." Write docstrings in
+  the present tense describing what the code MUST do, matching the file's own
+  style ("is_open=False must produce a collapsed outline item").
 - **#4058 — a new test helper ignored the repo's own naming convention.** It went
   in as `_font_with_differences`; the repo already had `_generate_flate_pdf` and
   `_generate_dag_with_forms`. His whole review was a one-line `suggestion` block
