@@ -95,3 +95,34 @@ If a test asserts the current behaviour, the "bug" is a deliberate design choice
 suppressions across three functions. No new tests (pure typing, no runtime change), no new
 comments, mypy baseline stated explicitly, corpus-test gap disclosed upfront.
 **That is the target shape: one PR, several call sites, nothing decorative.**
+
+## 2026-09-21 — two PRs written against this ledger before pushing
+
+Both in `pypdf/_font.py`, both crashes on `extract_text()` reproduced against a
+real reader before any code was written.
+
+- **`widths-not-an-array`** — a string `/Widths` raised `ValueError: invalid
+  literal for int()`.
+- **`type0-without-descendant-fonts`** — a `/Type0` font with no
+  `/DescendantFonts` raised a bare `KeyError`. The source comment claimed the
+  entry "need not be tested for"; that holds for the subtype, not the entry.
+  The false half of the comment was deleted, the useful half kept.
+
+Checks run before each push, not after:
+
+| Ledger item | Result |
+|---|---|
+| #1 explicit `pytest.param` ids | 3 and 5 ids, zero auto-generated |
+| #2 duplicate test | grepped `tests/` first; neither path had one |
+| #3 comments explaining the fix | none added; two false ones removed |
+| #4 abbreviated imports | none |
+| #9 fancy dashes / non-ASCII | none |
+| #15 naming convention | matched `test_font__<method>__<case>` from the file |
+| Rule #14 diff coverage | every line of both diffs measured `ok`, none missing |
+| Warning style | matched the file's `%(name)s` + keyword form, not an f-string |
+
+The warning style was the near-miss: the first draft used an f-string, which
+`_font.py` does not use. Caught by reading the two nearest `logger_warning`
+calls before committing — the same grep that Rule #15 exists for.
+
+Offline suite: 1390 passed on both branches.
