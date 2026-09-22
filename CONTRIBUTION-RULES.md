@@ -986,3 +986,47 @@ second round. Run the linter after any rename, never before only.
 [ ] Linter run AFTER the rename, not just before
 [ ] Any maintainer `suggestion` block applied verbatim, not paraphrased
 ```
+
+---
+
+## Rule #16 — A fix that widens a type must not narrow an existing one
+
+**The near-miss (joblib, 2026-09-22).** `effective_n_jobs` did not convert
+`n_jobs` to `int`, so a float passed straight through (`-1.5` → `7.5` workers)
+and a string raised `TypeError` from deep inside the backend. The fix was three
+lines:
+
+```python
+try:
+    n_jobs = int(n_jobs)
+except (TypeError, ValueError):
+    raise ValueError("n_jobs could not be converted to int")
+```
+
+Correct for every value the bug report covered — and it **broke
+`effective_n_jobs(None)`**, a documented path with its own non-regression test
+(joblib #984). `int(None)` raises, so a valid call started failing.
+
+Caught by running the existing behaviour immediately after the change rather
+than only the new cases:
+
+```bash
+# after ANY validation change, run the values that already worked
+python3 -c "from joblib import effective_n_jobs as f; print(f(None), f(-1), f())"
+```
+
+**16.1 List the inputs that already work before you write the guard.** Read the
+docstring and the existing tests for the sentinel values — `None`, `-1`, `0`,
+empty, the default. A guard that rejects a sentinel is a regression, not a fix.
+
+**16.2 A `try/except` around a conversion catches more than you meant.** Adding
+`TypeError` to catch a string also catches `None`. Decide which types are
+*valid* and let the rest fail, rather than catching broadly.
+
+### Pre-push gate — validation changes
+
+```
+[ ] Every sentinel value from the docstring still returns what it did before
+[ ] The existing tests for this function read, not just run
+[ ] The new guard sits AFTER the sentinel handling, not before
+```
