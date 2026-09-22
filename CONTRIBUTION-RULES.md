@@ -1030,3 +1030,57 @@ empty, the default. A guard that rejects a sentinel is a regression, not a fix.
 [ ] The existing tests for this function read, not just run
 [ ] The new guard sits AFTER the sentinel handling, not before
 ```
+
+---
+
+## Rule #17 — Count the open PRs before opening another
+
+**The discovery (2026-09-22).** Asked to diversify into ten new repos, the first
+check was not "which repos" but "what is already open":
+
+```bash
+gh api "search/issues?q=author:ME+type:pr+state:open&per_page=60" \
+  --jq '.items[] | "\(.repository_url|split("/")|.[-2:]|join("/"))#\(.number) \(.created_at[:10])"'
+```
+
+**37 open PRs across 21 repos. Median age 79 days. 21 of them older than 60
+days. 16 of the 37 were docstring-only.**
+
+The request was for more repos. The actual problem was that the existing ones
+were not merging — and 10 more would have made it 47 open and no more merged.
+
+**17.1 An abandoned PR is a worse signal than no PR.** A profile with 37 stale
+open PRs reads as someone who opens and leaves. Triage before adding.
+
+**17.2 The merge rate, not the repo count, is the number that matters.** Compare
+the two strategies in the record:
+
+| Approach | Result |
+|---|---|
+| pypdf: real bugs, reproduced first, one repo, sustained | **57 merged** |
+| Everything else: mostly docstrings, scattered across 21 repos | **7 merged** |
+
+Diversity did not merge the pypdf PRs. Bug quality and a maintainer
+relationship did.
+
+**17.3 "AI spam" is now a closure reason.** pallets/click closed two PRs in 2026
+with that one-word title. Before targeting a repo:
+
+```bash
+gh api "search/issues?q=repo:OWNER/REPO+AI+spam&per_page=5" --jq '.items[].title'
+```
+
+If it appears, skip the repo. Do **not** drop the AI disclosure line to get
+past the filter — evading detection is precisely what would justify the label,
+and it is unrecoverable once attached to a username.
+
+### The strongest bug shape, reconfirmed
+
+joblib `numpy_pickle.load` leaked `KeyError: 0` for a corrupt file where
+`pickle.load` raises `UnpicklingError: invalid load key, '\x00'.` **The library
+was harder to handle than the module it wraps.** That framing is very strong in
+review: the fix is not an opinion, it is alignment with an existing standard,
+and the test asserts the two messages are byte-identical so they cannot drift.
+
+Look for it: wherever a library wraps a stdlib module, compare their errors on
+the same bad input.
