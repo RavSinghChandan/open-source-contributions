@@ -126,3 +126,46 @@ The warning style was the near-miss: the first draft used an f-string, which
 calls before committing — the same grep that Rule #15 exists for.
 
 Offline suite: 1390 passed on both branches.
+
+## 2026-09-23 — the rules are measurably working; stop adding, start applying
+
+Review comments Stefan left on the last ten merged PRs:
+
+| PR | Comments | Rule that would have caused one |
+|---|---|---|
+| #4119 | **0** | — |
+| #4118 | **0** | — |
+| #4102 | **0** | — |
+| #4099 | **0** | — |
+| #4098 | 1 | #15 naming (`_strict` vs `__strict`) |
+| #4080 | 1 | obsolete test docstring |
+| #4074 | 0 | — |
+| #4069 | 1 | redundant compound condition |
+| #4064 | 0 | — |
+| #4058 | 1 | #15 naming |
+
+**Four consecutive zero-comment merges.** Every remaining comment was a
+one-liner, and every one of those is already a numbered rule.
+
+### What actually produces a first-time merge
+
+Not the number of rules. Four things, done before pushing:
+
+1. **Reproduce the crash through the public API first.** Never patch a `cast()`
+   because it looks unsafe — build the file, call the method, capture the
+   traceback. Half the candidates die here, which is the point: they were not
+   bugs (tqdm's negative interval, tenacity's `stop_after_attempt(0)`).
+2. **Grep the two nearest existing examples** before naming anything or writing
+   a warning. #4118's first draft used an f-string where `_font.py` uses
+   `%(name)s` + keywords. Caught before commit; it would have been a comment.
+3. **Measure the diff's own branch coverage**, not the file's.
+4. **Run the values that already worked.** Rule #16 came from a fix that
+   correctly rejected strings and broke `effective_n_jobs(None)`.
+
+### The failure mode to watch now
+
+The remaining mistakes are no longer *rule* failures, they are *process* slips:
+- a `Title:` prefix pasted into a PR title field (#4119)
+- opening PRs while 37 sat unreviewed across 21 repos (Rule #17)
+
+Both were caught by checking the result after acting. Neither needed a new rule.
