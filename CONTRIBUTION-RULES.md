@@ -19,6 +19,7 @@ The pre-PR checklist lives at the end of **Rule #12**. Work through it literally
 | If you are about to... | Read first |
 |---|---|
 | Pick a repo or an issue | Rule #8 — the four gates |
+| Pick a **new** repo | `MAINTAINER-PATTERNS.md` — measure it, read its closed PRs, find its shape |
 | Write the first line of code | Rule #11.1 — grep their AI policy |
 | Add a type annotation | Rule #10.1, Rule #12.1 |
 | Add a test | Rule #9.11, Rule #12.2 |
