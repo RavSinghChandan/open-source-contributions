@@ -109,3 +109,35 @@ maintainers already fuzz); tomlkit vs `tomllib` differs only where tomlkit follo
    except fpdf2/pypdf, where the latter is already accepted.
 5. Follow each repo's AI wording literally (Rule #11): pypdf requires a disclosure line;
    Python-Markdown and tomlkit have template sections for it.
+
+---
+
+## 7. The PDF ecosystem, measured (2026-11-08)
+
+Asked to stay in PDF, our strongest area. About 40 PDF and document-AI repos were measured
+the same way, plus one more number that turned out to matter most: **how many PRs are
+waiting**. A repo can merge plenty and still be a lottery.
+
+| Repo | Outside merges / 60 d | Open PRs | Opened vs merged (30 d) | Verdict |
+|---|---|---|---|---|
+| pikepdf, OCRmyPDF (jbarlow83) | 4 / 9 | few | — | ✅ ours; he also merges by hand into main (#749, #750) |
+| **PyMuPDF** (Artifex) | 12 | 15 | 54 vs 49 | ✅ about 9 in 10 merge; Artifex CLA by one comment |
+| **pdfannots** (0xabu) | 3 | 2 | — | ✅ every outside PR this year merged |
+| markitdown (Microsoft) | 26 | **486** | 111 vs 9 | ❌ about 8%: active, but swamped |
+| pdfly (py-pdf) | 1 (typo) | — | — | ⚠️ maintainers do the work themselves |
+| xhtml2pdf | 1 | — | — | ⚠️ luisza applies fixes himself in a release (our #851) |
+| docling, MinerU, opendataloader-pdf, PyPDFForm, pdf.js | many | — | — | ❌ AGENTS.md / CLAUDE.md |
+| pdfminer.six, pdfplumber, pdf2image, tabula-py, pdf2docx, olmocr, kreuzberg, pdftotext, pdfcpu, pdf-lib | 0–1 | — | — | ❌ not merging |
+
+**Rule: check the queue, not just the merges.** `open PRs` and `opened vs merged in 30 days`
+before any work. markitdown looked like the best target by merges and was the worst by queue.
+
+**What found the bugs (PDF knowledge as the edge):**
+- PyMuPDF: compare against pypdf on the same files. Letter page labels went `Z, AA, AB`
+  instead of the spec's `Z, AA, BB` (ISO 32000-1, Table 159).
+- pdfannots: every field was resolved with `resolve1()` except `/Contents` and `/Subtype`;
+  an indirect `/Contents` crashed the whole run. Built the sample PDF with pypdf.
+- Before each: search issues **and PRs** for the bug. markitdown's pipe-in-table bug had three
+  open PRs already; PyMuPDF's #5092 was fixed on master.
+
+Realistic ceiling: 4 to 6 merges a day across about 10 repos, not 10 to 20.
