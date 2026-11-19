@@ -16,13 +16,17 @@ checkout's own python (run this file with that interpreter).
 import argparse, glob, os, shutil, subprocess, sys, tempfile
 from textwrap import dedent
 
+# --shape-attrs adds fixed attributes to every shape, e.g. 'fill="none" stroke="#c00" stroke-width="6"'
+# so that stroke-* properties are visible (a stroke property on a shape without a stroke draws nothing).
+EXTRA = ""
 SHAPE = '<rect x="10" y="10" width="80" height="80"{attrs}/>'
 
 def contexts(prop, value, defs):
     """(name, svg body) pairs: the same visual feature reached in different ways."""
     pv = f'{prop}="{value}"'
     sv = f'{prop}:{value}'
-    s = lambda attrs: SHAPE.format(attrs=attrs)
+    ex = (" " + EXTRA) if EXTRA else ""
+    s = lambda attrs: SHAPE.format(attrs=(" " + EXTRA if EXTRA else "") + attrs)
     base = '<rect width="100" height="100" fill="#ffffff"/>'
     return [
         ("attribute",              s(f" {pv}")),
@@ -35,16 +39,16 @@ def contexts(prop, value, defs):
         ("group style",            f'<g style="{sv}">' + s("") + "</g>"),
         ("inherit keyword",        f"<g {pv}>" + s(f' {prop}="inherit"') + "</g>"),
         ("inherit chain",          f"<g {pv}><g {prop}=\"inherit\">" + s(f' {prop}="inherit"') + "</g></g>"),
-        ("use, set on use",        f'<defs><rect id="r" x="10" y="10" width="80" height="80"/></defs><use href="#r" {pv}/>'),
-        ("use, set on referenced", f'<defs><rect id="r" x="10" y="10" width="80" height="80" {pv}/></defs><use href="#r"/>'),
-        ("use of use",             f'<defs><rect id="r" x="10" y="10" width="80" height="80"/><use id="u" href="#r"/></defs><use href="#u" {pv}/>'),
-        ("use in group",           f'<defs><rect id="r" x="10" y="10" width="80" height="80"/></defs><g {pv}><use href="#r"/></g>'),
+        ("use, set on use",        f'<defs><rect id="r" x="10" y="10" width="80" height="80"{ex}/></defs><use href="#r" {pv}/>'),
+        ("use, set on referenced", f'<defs><rect id="r" x="10" y="10" width="80" height="80"{ex} {pv}/></defs><use href="#r"/>'),
+        ("use of use",             f'<defs><rect id="r" x="10" y="10" width="80" height="80"{ex}/><use id="u" href="#r"/></defs><use href="#u" {pv}/>'),
+        ("use in group",           f'<defs><rect id="r" x="10" y="10" width="80" height="80"{ex}/></defs><g {pv}><use href="#r"/></g>'),
         ("switch",                 f"<g {pv}><switch>" + s("") + "</switch></g>"),
-        ("text",                   f'<text x="10" y="70" font-size="70" font-family="Helvetica" {pv}>H</text>'),
-        ("tspan",                  f'<text x="10" y="70" font-size="70" font-family="Helvetica"><tspan {pv}>H</tspan></text>'),
-        ("tspan inherits text",    f'<text x="10" y="70" font-size="70" font-family="Helvetica" {pv}><tspan>H</tspan></text>'),
-        ("pattern content",        f'<defs><pattern id="p" width="100" height="100" patternUnits="userSpaceOnUse"><rect x="10" y="10" width="80" height="80" {pv}/></pattern></defs><rect width="100" height="100" fill="url(#p)"/>'),
-        ("pattern ancestor",       f'<defs {pv}><pattern id="p" width="100" height="100" patternUnits="userSpaceOnUse"><rect x="10" y="10" width="80" height="80"/></pattern></defs><rect width="100" height="100" fill="url(#p)"/>'),
+        ("text",                   f'<text x="10" y="70" font-size="70" font-family="Helvetica"{ex} {pv}>H</text>'),
+        ("tspan",                  f'<text x="10" y="70" font-size="70" font-family="Helvetica"{ex}><tspan {pv}>H</tspan></text>'),
+        ("tspan inherits text",    f'<text x="10" y="70" font-size="70" font-family="Helvetica"{ex} {pv}><tspan>H</tspan></text>'),
+        ("pattern content",        f'<defs><pattern id="p" width="100" height="100" patternUnits="userSpaceOnUse"><rect x="10" y="10" width="80" height="80"{ex} {pv}/></pattern></defs><rect width="100" height="100" fill="url(#p)"/>'),
+        ("pattern ancestor",       f'<defs {pv}><pattern id="p" width="100" height="100" patternUnits="userSpaceOnUse"><rect x="10" y="10" width="80" height="80"{ex}/></pattern></defs><rect width="100" height="100" fill="url(#p)"/>'),
         ("transformed group",      f'<g transform="translate(5 5) scale(.9)" {pv}>' + s("") + "</g>"),
         ("rotated group",          f'<g transform="rotate(10 50 50)" {pv}>' + s("") + "</g>"),
         ("nested transforms",      f'<g transform="scale(.9)"><g transform="translate(6 4)" {pv}>' + s("") + "</g></g>"),
@@ -69,7 +73,10 @@ def main():
     ap.add_argument("--paint", default="url(#g)")
     ap.add_argument("--threshold", type=float, default=1.5)
     ap.add_argument("--keep", action="store_true")
+    ap.add_argument("--shape-attrs", default="")
     a = ap.parse_args()
+    global EXTRA
+    EXTRA = a.shape_attrs
     sys.path.insert(0, a.fpdf2)
     import warnings, logging; warnings.simplefilter("ignore"); logging.disable(50)
     import numpy as np
