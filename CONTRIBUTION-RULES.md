@@ -1085,3 +1085,62 @@ and the test asserts the two messages are byte-identical so they cannot drift.
 
 Look for it: wherever a library wraps a stdlib module, compare their errors on
 the same bad input.
+
+
+---
+
+## Rule #16: The first-time-merge protocol (written 2026-11-19 from 5 repos of review history)
+
+**Evidence.** Of my merged PRs, these needed a CHANGES_REQUESTED round: pypdf 42 of 84 (50%),
+doctr 6 of 31 (19%), fpdf2 23 of 132 (17%); svglib 0 of 12, fontTools 0 of 7, Pillow 0 of 4.
+The zero-round repos got a small change, one real-world example, the repo's exact conventions.
+The costly rounds were never about the logic of the fix: they were the same dozen things.
+
+Before opening ANY PR, work through these. Each is a comment a maintainer already wrote to me.
+
+### A. Variation matrix (what andersonhc does to every fpdf2 PR)
+He takes the feature and tries it in every context. Do that first, against the browser:
+`tools/svg_variants.py` runs a property through attribute, style, class/id/descendant rule,
+`!important`, group, `inherit` keyword and chain, `<use>` (set on use / on referenced / use of use),
+`<switch>`, `<text>`/`<tspan>`, `<pattern>` content and ancestors, and transformed/rotated/nested
+groups, and flags every context where fpdf2 differs from Chrome. `--transform-orders` checks nested
+transform order against the flattened matrix. A context that differs is a review comment: fix it or
+state in the PR why it is out of scope.
+Past comments this would have caught: #2209 inherit, #2203 tspan runs + `<use>`, #2198 CSS + nested
+`<use>`, #2184 pattern ancestors, #2212 transform order, #2216 unit order.
+
+### B. Value semantics
+- Relative values are resolved where DECLARED, then inherited (em, ex, custom properties: #2204, #2200).
+- Unset means the INITIAL value, never an unrelated ancestor's (stroke is `none`, not the group's fill: #2198).
+- `inherit` is resolved from the parent in every place the other inherited properties are (#2209).
+- `!important` and duplicate declarations; specificity counts every class; stylesheet order (#2172, #2201).
+- Geometry built before its inputs are known must be rebuilt (#2208).
+
+### C. Input handling
+- Malformed input is rejected with a clear error, never silently accepted or repaired (#2207; doctr #2219).
+- Inputs the OLD code accepted must give the same result: run old vs new on `+2`, ` 2`, `2.5`, legacy
+  scales (#1990, #2197). Test the old behaviour, not just the crash.
+- Every reference may be indirect/shared/cyclic: resolve with `get_object()` and TEST it with an indirect
+  reference (pypdf #4442, where my `.get()` broke the commonest case and my tests used direct objects).
+
+### D. Resource safety
+- Time a hostile input (100k nested/repeated) before pushing; no quadratic regex, no unmemoized
+  traversal (#2169, #2178, #2198, trafilatura #1002). Check it against the repo's own limits.
+- Concurrency: temp files need unique names (doctr #2204).
+
+### E. Evidence in the PR
+- A REAL source with a public link and licence (pypdf #4443: "where can I find this file?"). Add a
+  real-file test (pypdf: `@pytest.mark.enable_socket` + `get_data_from_url`).
+- Say what the fix does NOT cover; one fix per PR; open the PR only for a bug that happens in a real file.
+- Search open PRs and issues for the same function first (rule 12).
+
+### F. Mechanical gate: run `tools/prepush.sh <fpdf2|pypdf|svglib>`
+black/pylint (W1404: wrap adjacent strings in parentheses, in tests too)/mypy/pyright/typos/ruff, the
+FULL suite including network tests, no AI trailer, no submodule pointer staged, branch not behind.
+Also: mutation-check every new test against upstream, measure branch coverage of the diff, give
+parametrize cases `id=`, update `public_api.json` (svglib), CHANGELOG entry at a position no sibling
+branch uses, after a merge re-run everything. Never `ruff format` pypdf (it rewrote a whole file once).
+
+### G. After opening
+Merge master into every sibling branch as soon as one of them merges (conflicts cost rounds:
+pypdf #4023 "too many PRs touching the same file section"). Never force-push an opened branch.

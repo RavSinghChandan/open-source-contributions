@@ -141,3 +141,63 @@ before any work. markitdown looked like the best target by merges and was the wo
   open PRs already; PyMuPDF's #5092 was fixed on master.
 
 Realistic ceiling: 4 to 6 merges a day across about 10 repos, not 10 to 20.
+
+---
+
+## 8. Second search for fast-merging repos (2026-11-11)
+
+Last 30 days: 158 of 163 merges came from 8 repos; fpdf2 71, doctr 30, pypdf 17. New method that
+worked best: take the *other* prolific outside contributors in fpdf2/pypdf/doctr/marko and see which
+repos keep merging them (`gh search prs --author X --merged`). Then measure (REST pulls API, 60 days).
+
+| Repo | Outside merges | Median h | Rejected | Open | Merger | Verdict |
+|---|---|---|---|---|---|---|
+| PyTables/PyTables | 46 | **5** | 0 | 4 | avalentino | ✅ fastest; but needs a C build to test master (wheel 3.11.1 is 313 commits behind; overlay fails) |
+| pypa/distlib | 20 | 71 | 0 | 6 | vsajip | ✅ PR branch `exclusive-ordered-comparison`. **Must stay Python 2.7 compatible.** No CONTRIBUTORS.txt edit for AI-assisted PRs; he asks for the prompt if undisclosed |
+| eea/odfpy | 6 | 5.5 | 0 | 4 | sorenroug | ✅ PR branch `manifest-mimetype-entry`; shape = #154 (skip list in `load()`) |
+| scrapy/cssselect | 26 | 27 | 2 | 6 | wRAR | ⚠️ 72k selectors vs soupsieve: zero result differences; already mined by itecz26 |
+| nipy/nibabel | 29 | 28 | 10 | 42 | effigies | ⚠️ every confirmed bug has an open linked PR; dislikes unneeded comments |
+| python-caldav/caldav | 14 | 16 | 0 | 4 | tobixen | ❌ AI-POLICY.md: issue first, "Assisted-By:" + prompts in commit, no AI "low-hanging fruit" |
+| arviz-stats, fsspec, holidays, cantools, trimesh, pefile | 16–88 | 48–121 | 10–25 | 15–129 | — | possible later: long queues or many rejections |
+| file-format libs (msg-extractor, oletools, mutagen, tinytag, pysubs2, exif-py, ebooklib, html2text, markdownify, mdformat, h5py, pydicom, imageio, meshio) | 0–14 | slow | — | — | — | ❌ not merging outside PRs |
+
+Tools that found things: `packaging` as the reference for distlib.version; odfdo + pandas sample ODF
+files for odfpy (load → save → reload). odf2xhtml footnote crash = already #127/#160.
+
+### 8.1 Same day, round two (no new PRs)
+
+| Repo | Probe | Result |
+|---|---|---|
+| erocarrera/pefile | 785 unique real PE files vs LIEF (imports, exports, sections, delay imports) + 7 methods | Agrees everywhere; export names stop at `max_symbol_exports` (0x2000), a documented knob |
+| mikedh/trimesh | every `models/` file round-tripped through STL/PLY/OBJ/OFF/GLB/3MF | All identical. Rules: AI_PREFERENCE.md (≤50 words AI text in body, small diff), bot closes a 2nd open PR, open against `main` (mikedh retargets) |
+| arviz-devs/arviz-stats | ess/rhat/mcse/hdi vs legacy arviz 0.23 on 40 chain shapes | Identical; array-layer `ess(method="tail")` needs `prob` by its docstring |
+
+Queued for distlib after the first PR merges: `==2.*` does not match `2a0` (`_match_prefix` is string based; packaging says True).
+
+---
+
+## 9. Third search (2026-11-13)
+
+Method as in §8: repos where the other prolific outside contributors of fpdf2/pypdf/doctr/marko/svglib
+got merged since 2026-09-15, then measured over 60 days (outside PRs, bots excluded).
+
+| Repo | Outside merges | Authors | Rejected | Median h | Open | Policy files | Verdict |
+|---|---|---|---|---|---|---|---|
+| **facelessuser/soupsieve** | 30 | 9 | 4 | **5.2** | 3 (all owner's) | none | ✅ chosen. Spec-correctness fixes merge in hours; changelog entry under the unreleased version; Chrome comparison is accepted as evidence (#345) |
+| pdm-project/pdm | 64 | 33 | 7 | 8.9 | 11 | AGENTS.md: Human Attestation in PR body (like marko) | ✅ next candidate |
+| modelscope/FunASR | 56 | 26 | 8 | 25.1 | 13 | CONTRIBUTING (no AI ban) | possible (AI/ML, needs model downloads) |
+| xorbitsai/inference | 266 | 20 | 1 | 7.7 | 25 | AGENTS.md + CLAUDE.md | ⚠️ mostly team members |
+| ultralytics/ultralytics | 80 | 28 | 37 | 13 | 29 | AGENTS/CLAUDE | ❌ many rejections |
+| roboflow/supervision | 229 | 56 | 10 | 36.5 | 44 | AGENTS/CLAUDE/copilot | ⚠️ crowded |
+| HKUDS/DeepTutor | 252 | 89 | 37 | 54 | 234 | — | ❌ queue of 234 |
+| onekey-sec/unblob, rasbt/LLMs-from-scratch | 18 / 12 | — | — | 55 / 5 | 34 / 3 | — | ❌ slow / mostly typo fixes |
+
+**soupsieve bug-finding tool:** Chromium via Playwright (bench frontend node_modules) vs soupsieve on the same
+html5lib-parsed documents, 90 selectors, 300 generated form documents + 389 real HTML files
+(scratchpad `ss/`). Differences that are NOT bugs (soupsieve's documented choices or Chromium quirks):
+`:has(p a)` needs `NOSTRICT`; `:empty` ignores whitespace (Selectors 4); `:optional` on `<button>`
+and `:in-range` on every date/number input are Chromium quirks; `:disabled` on `<option>` in a
+disabled `<select>`/`<fieldset>` is written explicitly into `CSS_DISABLED`. Found: `type=range` is
+clamped, so always `:in-range` (branch `range-input-clamped`).
+Environment: installing packages is blocked; run soupsieve from source with
+`PYTHONPATH=soupsieve-fork unstructured-fork/.venv/bin/python` (has bs4 + html5lib + pytest).
