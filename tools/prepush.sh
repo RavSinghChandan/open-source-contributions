@@ -8,6 +8,8 @@ set -u
 repo=${1:?usage: prepush.sh fpdf2|pypdf|svglib}
 py=.venv/bin/python
 fail=0
+# the branch is compared with the maintainers' main (a fork's origin/HEAD can be months behind)
+base=origin/HEAD; git rev-parse --verify -q upstream/main >/dev/null && base=upstream/main
 run() { echo "--- $*"; "$@" || { echo "FAILED: $*"; fail=1; }; }
 case $repo in
   fpdf2)
@@ -28,8 +30,17 @@ case $repo in
     ;;
   pypdf)
     run $py -m ruff check pypdf tests                        # do NOT run `ruff format`: pypdf does not use it
-    run $py -m mypy pypdf
-    run $py -m pytest -q -p no:cacheprovider tests           # INCLUDE the network (enable_socket) tests
+    # mypy: only errors in files this branch changes (_crypt_providers has 22 on upstream/main)
+    echo "--- mypy (changed files)"
+    changed=$(git diff --name-only $base...HEAD -- 'pypdf/*.py')
+    if [ -n "$changed" ]; then
+      out=$($py -m mypy pypdf 2>&1 | grep -E "^pypdf/.*error" | grep -F "$changed" || true)
+      [ -z "$out" ] || { echo "$out"; echo "FAILED: mypy in changed files"; fail=1; }
+    fi
+    # INCLUDE the network (enable_socket) tests; the png-predictors one needs the sample-files submodule
+    echo "--- pytest"
+    bad=$($py -m pytest -q -p no:cacheprovider tests 2>&1 | grep '^FAILED' | grep -v 'matches_image_without_predictor' || true)
+    [ -z "$bad" ] || { echo "$bad"; echo "FAILED: tests"; fail=1; }
     ;;
   svglib)
     run $py -m ruff format --check src tests
@@ -38,8 +49,8 @@ case $repo in
     run $py -m pytest -q -p no:cacheprovider tests           # public_api.json: `python -m tests.test_public_api --update`
     ;;
 esac
-git log origin/HEAD..HEAD --format=%B 2>/dev/null | grep -qi "claude\|anthropic\|co-authored" && { echo "FAILED: AI trailer in a commit"; fail=1; }
-git diff --name-only origin/HEAD...HEAD 2>/dev/null | grep -q "^sample-files$" && { echo "FAILED: submodule pointer staged"; fail=1; }
-git merge-base --is-ancestor origin/HEAD HEAD || { echo "FAILED: branch is behind origin: merge it first"; fail=1; }
+git log $base..HEAD --format=%B 2>/dev/null | grep -qi "claude\|anthropic\|co-authored" && { echo "FAILED: AI trailer in a commit"; fail=1; }
+git diff --name-only $base...HEAD 2>/dev/null | grep -q "^sample-files$" && { echo "FAILED: submodule pointer staged"; fail=1; }
+git merge-base --is-ancestor $base HEAD || { echo "FAILED: branch is behind $base: merge it first"; fail=1; }
 [ $fail = 0 ] && echo "ALL CHECKS PASSED" || echo "SOME CHECKS FAILED"
 exit $fail
